@@ -1,6 +1,12 @@
 svg.ViolinDisplay {
   border: 1px solid black;
 }
-g.ViolinDisplay text {
+
+svg.ViolinDisplay g.ViolinDisplay text {
   pointer-events: none;
 }
+
+/* svg.ViolinDisplay circle.Note { */
+/*   fill: #000; */
+/*   transition: fill 0.5s; */
+/* } */

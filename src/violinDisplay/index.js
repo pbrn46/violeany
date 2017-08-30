@@ -63,6 +63,10 @@ class ViolinDisplay extends Component {
     var fill = isClicked ? "#8ff" :
                isPlaying ? "#8f8" :
                isInPlaySet ? "#ff8" : "#fff"
+    var transition = "fill 0.1s"
+    if (!isClicked && !isPlaying)
+      transition = "fill 1s"
+
 
     // Event callback data
     var key = {position: [stringIndex, noteIndex], finger: -1}
@@ -81,12 +85,13 @@ class ViolinDisplay extends Component {
       <g className="ViolinDisplay"
         key={note + "-" + stringIndex + "-" + noteIndex}>
         <circle
+          className="Note"
           cx={cx}
           cy={cy}
           r={NOTE_RADIUS - STROKE_WIDTH}
           stroke="#000"
           strokeWidth={STROKE_WIDTH}
-          fill={fill}
+        style={{fill: fill, transition: transition}}
           onMouseDown={e => this.props.setKeyClicked(key)}
           onMouseUp={e => this.props.setKeyClicked(null)}
           onMouseOut={e => this.props.setKeyClicked(null)}

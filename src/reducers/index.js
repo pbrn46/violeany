@@ -1,6 +1,15 @@
 import { combineReducers } from 'redux'
 import * as actions from '../actions'
 
+function indexPlaying(state = null, action) {
+  switch (action.type) {
+    case actions.SET_INDEXPLAYING:
+      return action.indexPlaying
+    default:
+      return state
+  }
+}
+
 // In the format [{string: 0-4, position: 0-12, finger: 0-4}, ...]
 function keysPlaying(state = [], action) {
   switch (action.type) {
@@ -82,7 +91,8 @@ function handPosition(state = 1, action) {
   return state
 }
 
-function bpm(state = 300, action) {
+// Scales BPM, Arpeggios BPM:
+function bpm(state = 104, action) {
   switch (action.type) {
     case actions.SET_BPM:
       var bpm = parseInt(action.bpm, 10)
@@ -94,6 +104,7 @@ function bpm(state = 300, action) {
 }
 
 export default combineReducers({
+  indexPlaying,
   keysPlaying,
   keyClicked,
   handPosition,

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 // Components
+import StaffDisplay from './staffDisplay'
 import ViolinDisplay from './violinDisplay'
 import ViolinPlayer from './violinPlayer'
 
@@ -12,6 +13,7 @@ class App extends Component {
     return (
       <div className="container App">
         <ViolinPlayer />
+        <StaffDisplay />
         <ViolinDisplay />
       </div>
     )

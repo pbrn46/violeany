@@ -1,3 +1,9 @@
+export const SET_INDEXPLAYING = "SET_INDEXPLAYING"
+export const setIndexPlaying = (indexPlaying) => ({
+  type: SET_INDEXPLAYING,
+  indexPlaying,
+})
+
 export const SET_KEYSPLAYING = "SET_KEYSPLAYING"
 export const setKeysPlaying = (keysPlaying) => ({
   type: SET_KEYSPLAYING,

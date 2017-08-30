@@ -25,6 +25,7 @@ const mapDispatchToProps = ({
   setPlayTuningKey: actions.setPlayTuningKey,
   setPlayLoopMode: actions.setPlayLoopMode,
   setKeysPlaying: actions.setKeysPlaying,
+  setIndexPlaying: actions.setIndexPlaying,
   setPlayStatus: actions.setPlayStatus,
   setVolume: actions.setVolume,
   setBpm: actions.setBpm,
@@ -146,16 +147,20 @@ class ViolinPlayer extends Component {
       this.seq.stop()
       this.seq.dispose()
     }
-    this.seq = new Tone.Sequence((time, setItem) => {
+    var playSet = this.getPlaySet()
+    var range = [...playSet.keys()]
+    this.seq = new Tone.Sequence((time, index) => {
+      let setItem = playSet[index]
       let note = ViolinUtil.noteFromPosition(setItem.position)
       this.synth.triggerAttackRelease(note, "8n", time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying([setItem])
+        this.props.setIndexPlaying(index)
       }, time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying(null)
       }, Tone.Time(time).add("8n"))
-    }, this.getPlaySet(), "4n").start("+0.1")
+    }, range, "4n").start("+0.1")
     if (Number.isInteger(this.props.bpm))
       Tone.Transport.bpm.value = this.props.bpm
     this.seq.loop = this.props.playLoopMode !== "ONCE"
@@ -216,7 +221,7 @@ class ViolinPlayer extends Component {
     ]
     return (
       <div className="form-inline ViolinPlayer">
-        <div className="input-group input-group-sm mr-2">
+        <div className="input-group input-group-sm mr-3">
           <button
             className={
               "btn btn-sm" +
@@ -234,7 +239,7 @@ class ViolinPlayer extends Component {
         </div>
 
 
-        <div className="input-group input-group-sm mr-2">
+        <div className="input-group input-group-sm mr-3">
           <div className="input-group-addon">
             Volume
           </div>
@@ -249,7 +254,7 @@ class ViolinPlayer extends Component {
           </div>
         </div>
 
-        <div className="input-group input-group-sm mr-2">
+        <div className="input-group input-group-sm mr-3">
           <div className="input-group-addon">
             BPM
           </div>
@@ -261,7 +266,7 @@ class ViolinPlayer extends Component {
           />
         </div>
 
-        <div className="input-group input-group-sm mr-2">
+        <div className="input-group input-group-sm mr-3">
           <div className="input-group-addon">
             Play Mode
           </div>
@@ -278,7 +283,7 @@ class ViolinPlayer extends Component {
         </div>
 
         {this.props.playMode === "TUNING" ? (
-           <div className="input-group input-group-sm">
+           <div className="input-group input-group-sm mr-3">
              <div className="input-group-addon">
                Tuning Key
              </div>
@@ -295,7 +300,7 @@ class ViolinPlayer extends Component {
            </div>
         ) : null}
         {this.props.playMode === "SCALES" ? (
-           <div className="input-group input-group-sm">
+           <div className="input-group input-group-sm mr-3">
              <div className="input-group-addon">
                Scale
              </div>
@@ -312,7 +317,7 @@ class ViolinPlayer extends Component {
            </div>
         ) : null}
         {this.props.playMode === "SCALES" ? (
-           <div className="input-group input-group-sm">
+           <div className="input-group input-group-sm mr-3">
              <div className="input-group-addon">
                Loop Mode
              </div>
