@@ -155,7 +155,10 @@ class ViolinPlayer extends Component {
       this.synth.triggerAttackRelease(note, "8n", time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying([setItem])
-        this.props.setIndexPlaying(index)
+        if (this.props.playMode === "TUNING")
+          this.props.setIndexPlaying(null)
+        else
+          this.props.setIndexPlaying(index)
       }, time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying(null)
@@ -172,6 +175,7 @@ class ViolinPlayer extends Component {
   }
   stop() {
     this.props.setKeysPlaying(null)
+    this.props.setIndexPlaying(null)
     Tone.Transport.stop()
   }
   handlePlayClick(e) {
@@ -220,25 +224,27 @@ class ViolinPlayer extends Component {
       ["ALL", "All"],
     ]
     return (
-      <div className="form-inline ViolinPlayer">
-        <div className="input-group input-group-sm mr-3">
+      <div className="ViolinPlayer">
+      <div className="form-inline mb-2">
+        <div className="input-group input-group mr-3">
           <button
             className={
-              "btn btn-sm" +
+              "btn" +
               (this.props.playStatus === "started" ? " btn-primary" : " btn-secondary")}
             type="button"
             onClick={this.handlePlayClick}
           >Play</button>
           <button
             className={
-              "btn btn-sm" +
+              "btn" +
               (this.props.playStatus === "stopped" ? " btn-primary" : " btn-secondary")}
             type="button"
             onClick={this.handleStopClick}
           >Stop</button>
         </div>
+      </div>
 
-
+      <div className="form-inline mb-2">
         <div className="input-group input-group-sm mr-3">
           <div className="input-group-addon">
             Volume
@@ -265,7 +271,9 @@ class ViolinPlayer extends Component {
             size={3}
           />
         </div>
+      </div>
 
+      <div className="form-inline mb-2">
         <div className="input-group input-group-sm mr-3">
           <div className="input-group-addon">
             Play Mode
@@ -333,6 +341,7 @@ class ViolinPlayer extends Component {
              </select>
            </div>
         ) : null}
+      </div>
       </div>
     )
   }

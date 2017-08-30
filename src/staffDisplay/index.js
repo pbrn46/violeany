@@ -69,6 +69,24 @@ const STAFF_LINE_YS = (() => {
 })()
 
 class StaffDisplay extends Component {
+  scrollToIndexAsNeeded(index) {
+    var notePos = this.generateCx(index)
+    var scrollLeft = this.scrollBox.scrollLeft()
+    var offset14 = this.scrollBox.width() * 1 / 4
+    var offset34 = this.scrollBox.width() * 3 / 4
+    var thresholdMax = scrollLeft + offset34
+    var thresholdMin = scrollLeft + offset14
+    if (notePos > thresholdMax || notePos < thresholdMin)
+      this.scrollBox.scrollLeft(notePos - offset14)
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.indexPlaying !== this.props.indexPlaying) {
+      this.scrollToIndexAsNeeded(this.props.indexPlaying)
+    }
+  }
+  generateCx(index) {
+    return index * NOTE_DISTANCE_X + NOTE_RADIUS + PADL_X
+  }
   renderNote(playSet, index, key) {
     // Note
     var note = ViolinUtil.noteFromPosition(key.position)
@@ -82,7 +100,7 @@ class StaffDisplay extends Component {
     }
 
     // Positioning
-    var cx = index * NOTE_DISTANCE_X + NOTE_RADIUS + PADL_X
+    var cx = this.generateCx(index)
     var cy = NOTE_YS[noteBase + octave]
 
     // Fill Color
@@ -116,7 +134,7 @@ class StaffDisplay extends Component {
         />
       )
     }
-
+    // TODO: C4 (and other floating notes as necessary) needs a horizontal line
     return (
       <g className="ViolinDisplay"
         key={index}>
@@ -176,17 +194,24 @@ class StaffDisplay extends Component {
   }
   render() {
     var playSet = ViolinUtil.generatePlaySet(this.props.playScale, this.props.playLoopMode)
-    var minWidth = (playSet.length - 1) * NOTE_DISTANCE_X + NOTE_RADIUS * 2 + PADL_X + PADR_X
+    var svgWidth = (playSet.length - 1) * NOTE_DISTANCE_X + NOTE_RADIUS * 2 + PADL_X + PADR_X
     return (
-      <div className="StaffDisplay" style={{overflowY: "auto"}}>
-      <svg className="StaffDisplay"
-        width="100%"
-        height={SVG_HEIGHT}
-        style={{minWidth: minWidth}}
-        >
-        {this.renderStaves()}
-        {this.renderNotes(playSet)}
-      </svg>
+      <div
+        className="StaffDisplay"
+        ref={el => this.scrollBox = window.$(el)}
+        style={{overflowX: "auto"}}>
+        <div
+          style={{width: "0px"}}>
+          <svg className="StaffDisplay"
+            height={SVG_HEIGHT}
+            style={{
+              width: svgWidth,
+            }}
+          >
+            {this.renderStaves()}
+            {this.renderNotes(playSet)}
+          </svg>
+        </div>
       </div>
     )
   }

@@ -7,14 +7,14 @@ import './index.css'
 
 const NOTE_RADIUS = 25
 const FIRST_ROW_MARGIN_Y = 10
-const NOTE_DISTANCE_X = 60
+const NOTE_DISTANCE_X = 55
 const NOTE_DISTANCE_Y = 50
 const NOTE_FONT_SIZE = 16
 const OCTAVE_FONT_SIZE = 10
 const FINGER_FONT_SIZE = 10
 const STROKE_WIDTH = 1
-const SVG_WIDTH = NOTE_DISTANCE_X * (4 - 1) + NOTE_RADIUS * 2 + 2
-const SVG_HEIGHT = NOTE_DISTANCE_Y * (13 - 1) + NOTE_RADIUS * 2 + 2 + FIRST_ROW_MARGIN_Y
+const SVG_WIDTH = NOTE_DISTANCE_X * (4 - 1) + NOTE_RADIUS * 2
+const SVG_HEIGHT = NOTE_DISTANCE_Y * (13 - 1) + NOTE_RADIUS * 2 + FIRST_ROW_MARGIN_Y
 const STRING_XS = [
   0 * NOTE_DISTANCE_X + NOTE_RADIUS,
   1 * NOTE_DISTANCE_X + NOTE_RADIUS,
@@ -32,6 +32,7 @@ const NOTE_YS = (() => {
 const mapStateToProps = (store) => ({
   keysPlaying: store.keysPlaying,
   playScale: store.playScale,
+  playMode: store.playMode,
   playLoopMode: store.playLoopMode,
   keyClicked: store.keyClicked,
 })
@@ -51,6 +52,8 @@ class ViolinDisplay extends Component {
     }
 
     // Fill Color
+    if (this.props.playMode === "TUNING")
+      playSet = {}
     var isInPlaySet = ViolinUtil.isInPlaySet(
       [stringIndex, noteIndex], playSet)
     var isPlaying = ViolinUtil.isInPlaySet(
@@ -137,18 +140,20 @@ class ViolinDisplay extends Component {
   render() {
     var playSet = ViolinUtil.generatePlaySet(this.props.playScale, this.props.playLoopMode)
     return (
-      <svg className="ViolinDisplay"
-        width={SVG_WIDTH} height={SVG_HEIGHT}>
-        <line
-          x1={0}
-          x2={SVG_WIDTH}
-          y1={NOTE_RADIUS * 2 + FIRST_ROW_MARGIN_Y / 2}
-          y2={NOTE_RADIUS * 2 + FIRST_ROW_MARGIN_Y / 2}
-          stroke="#000"
-          strokeWidth={FIRST_ROW_MARGIN_Y / 2}
-        />
-        {this.renderStrings(playSet, ViolinUtil.STRINGS)}
-      </svg>
+      <div className="text-center ViolinDisplay">
+        <svg className="ViolinDisplay"
+          width={SVG_WIDTH} height={SVG_HEIGHT}>
+          <line
+            x1={0}
+            x2={SVG_WIDTH}
+            y1={NOTE_RADIUS * 2 + FIRST_ROW_MARGIN_Y / 2}
+            y2={NOTE_RADIUS * 2 + FIRST_ROW_MARGIN_Y / 2}
+            stroke="#000"
+            strokeWidth={FIRST_ROW_MARGIN_Y / 2}
+          />
+          {this.renderStrings(playSet, ViolinUtil.STRINGS)}
+        </svg>
+      </div>
     )
   }
 }
