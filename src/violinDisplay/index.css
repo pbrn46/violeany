@@ -1,0 +1,6 @@
+svg.ViolinDisplay {
+  border: 1px solid black;
+}
+g.ViolinDisplay text {
+  pointer-events: none;
+}
