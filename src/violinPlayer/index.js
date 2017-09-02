@@ -9,7 +9,7 @@ import './index.css'
 
 const mapStateToProps = (store) => ({
   keysPlaying: store.keysPlaying,
-  keyClicked: store.keyClicked,
+  keysClicked: store.keysClicked,
   playMode: store.playMode,
   playScale: store.playScale,
   playTuningKey: store.playTuningKey,
@@ -17,6 +17,7 @@ const mapStateToProps = (store) => ({
   playStatus: store.playStatus,
   volume: store.volume,
   bpm: store.bpm,
+  simulateMode: store.simulateMode,
 })
 
 const mapDispatchToProps = ({
@@ -29,6 +30,7 @@ const mapDispatchToProps = ({
   setPlayStatus: actions.setPlayStatus,
   setVolume: actions.setVolume,
   setBpm: actions.setBpm,
+  setSimulateMode: actions.setSimulateMode,
 })
 
 class ViolinPlayer extends Component {
@@ -81,17 +83,32 @@ class ViolinPlayer extends Component {
       this.synth.set("volume", ViolinUtil.percentToDecibel(this.props.volume))
     }
 
-    if (this.props.keyClicked !== prevProps.keyClicked) {
+    if (this.props.keysClicked !== prevProps.keysClicked) {
       let note
-      if (this.props.keyClicked !== null) {
+      let notes = []
+      let prevNotes = []
+
+      for (let key of prevProps.keysClicked) {
         note = ViolinUtil.noteFromPosition(
-          this.props.keyClicked.position)
-        this.synth.triggerAttack(note)
+          key.position)
+        prevNotes.push(note)
       }
-      else if (prevProps.keyClicked !== null) {
+      for (let key of this.props.keysClicked) {
         note = ViolinUtil.noteFromPosition(
-          prevProps.keyClicked.position)
-        this.synth.triggerRelease(note)
+          key.position)
+        notes.push(note)
+      }
+
+      for (let note of notes) {
+        if (prevNotes.indexOf(note) === -1) {
+          this.synth.triggerAttack(note)
+        }
+      }
+
+      for (let note of prevNotes) {
+        if (notes.indexOf(note) === -1) {
+          this.synth.triggerRelease(note)
+        }
       }
     }
   }
@@ -341,6 +358,20 @@ class ViolinPlayer extends Component {
              </select>
            </div>
         ) : null}
+      </div>
+      <div className="form-inline mb-2">
+        <div className="input-group input-group-sm mr-3">
+          <div className="input-group-addon">
+            Simulate Mode
+          </div>
+          <select
+            className="custom-select custom-select-sm"
+            onChange={(e) => this.props.setSimulateMode(e.target.value === "true")}
+            value={this.props.simulateMode}>
+              <option value={true}>On</option>
+              <option value={false}>Off</option>
+          </select>
+        </div>
       </div>
       </div>
     )

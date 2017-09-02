@@ -10,9 +10,21 @@ export const setKeysPlaying = (keysPlaying) => ({
   keysPlaying,
 })
 
-export const SET_KEYCLICKED = "SET_KEYCLICKED"
-export const setKeyClicked = (keyClicked) => ({
-  type: SET_KEYCLICKED,
+export const SET_KEYSCLICKED = "SET_KEYSCLICKED"
+export const setKeysClicked = (keysClicked) => ({
+  type: SET_KEYSCLICKED,
+  keysClicked,
+})
+
+export const ADD_KEYCLICKED = "ADD_KEYCLICKED"
+export const addKeyClicked = (keyClicked) => ({
+  type: ADD_KEYCLICKED,
+  keyClicked,
+})
+
+export const REMOVE_KEYCLICKED = "REMOVE_KEYCLICKED"
+export const removeKeyClicked = (keyClicked) => ({
+  type: REMOVE_KEYCLICKED,
   keyClicked,
 })
 
@@ -44,6 +56,12 @@ export const SET_PLAYSTATUS = "SET_PLAYSTATUS"
 export const setPlayStatus = (playStatus) => ({
   type: SET_PLAYSTATUS,
   playStatus,
+})
+
+export const SET_SIMULATEMODE = "SET_SIMULATEMODE"
+export const setSimulateMode = (simulateMode) => ({
+  type: SET_SIMULATEMODE,
+  simulateMode,
 })
 
 export const SET_VOLUME = "SET_VOLUME"

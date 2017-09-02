@@ -27,11 +27,11 @@ const mapStateToProps = (store) => ({
   indexPlaying: store.indexPlaying,
   playScale: store.playScale,
   playLoopMode: store.playLoopMode,
-  keyClicked: store.keyClicked,
+  keysClicked: store.keysClicked,
 })
 
 const mapDispatchToProps = ({
-  setKeyClicked: actions.setKeyClicked,
+  setKeysClicked: actions.setKeysClicked,
 })
 
 const NoteToY = (note) => {
@@ -106,10 +106,13 @@ class StaffDisplay extends Component {
     // Fill Color
     var isPlaying = index === this.props.indexPlaying
     var isClicked = false
-    if (this.props.keyClicked)
+    if (this.props.keysClicked)
+      // isClicked =
+      //   this.props.keysClicked.position[0] === key.position[0] &&
+      //   this.props.keysClicked.position[1] === key.position[1]
       isClicked =
-        this.props.keyClicked.position[0] === key.position[0] &&
-        this.props.keyClicked.position[1] === key.position[1]
+        ViolinUtil.PlaySets.hasPosition(
+          this.props.keysClicked, key.position)
     var fill = isClicked ? "#8ff" :
                isPlaying ? "#8f8" : "#000"
     var transition = "fill 0.0s"

@@ -1,0 +1,15 @@
+
+button.InfoButton {
+  background: none;
+  border: none;
+  padding: 3px;
+}
+
+button.InfoButton:hover {
+  background: #ddd;
+}
+
+button.InfoButton:focus {
+  outline: 0;
+  background: ddd;
+}

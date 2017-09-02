@@ -234,28 +234,32 @@ export function maxNote() {
   return NOTES[NOTES.length - 1]
 }
 
-export function isInPlaySet(position, playSet) {
-  for (var i = 0; i < playSet.length; i++) {
-    if (position[0] === playSet[i].position[0]
-        && position[1] === playSet[i].position[1]) {
-        return true
-    }
-  }
-  return false
-}
+export class PlaySets {
 
-// Returns the fingers attribute of keysPlaying if found string and position found. null otherwise
-export function fingerInPlaySet(position, playSet) {
-  for (var i = 0; i < playSet.length; i++) {
-    if (position[0] === playSet[i].position[0]
-        && position[1] === playSet[i].position[1]) {
-      if (playSet[i].finger === undefined)
-        return -1
-      else
-        return playSet[i].finger
+  // returns true if position is in playSet
+  static hasPosition(playSet, position) {
+    for (var i = 0; i < playSet.length; i++) {
+      if (position[0] === playSet[i].position[0]
+          && position[1] === playSet[i].position[1]) {
+        return true
+      }
     }
+    return false
   }
-  return null
+
+  // Returns the fingers attribute of keysPlaying if found string and position found. null otherwise
+  static fingerFromPosition(position, playSet) {
+    for (var i = 0; i < playSet.length; i++) {
+      if (position[0] === playSet[i].position[0]
+          && position[1] === playSet[i].position[1]) {
+        if (playSet[i].finger === undefined)
+          return -1
+        else
+          return playSet[i].finger
+      }
+    }
+    return null
+  }
 }
 
 export function percentToDecibel(pct) {

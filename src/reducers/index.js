@@ -14,18 +14,28 @@ function indexPlaying(state = null, action) {
 function keysPlaying(state = [], action) {
   switch (action.type) {
     case actions.SET_KEYSPLAYING:
-      var keysPlaying = action.keysPlaying
-      if (keysPlaying === null) return []
-      return keysPlaying
+      if (action.keysPlaying === null) return []
+      return action.keysPlaying
     default:
       return state
   }
 }
 
-function keyClicked(state = null, action) {
+function keysClicked(state = [], action) {
   switch (action.type) {
-    case actions.SET_KEYCLICKED:
-      return action.keyClicked
+    case actions.SET_KEYSCLICKED:
+      if (action.keysClicked === null) return []
+      return action.keysClicked
+    case actions.ADD_KEYCLICKED:
+      return [...state, action.keyClicked]
+    case actions.REMOVE_KEYCLICKED:
+      return state.filter((value) => {
+        return (
+          value.position[0] !== action.keyClicked.position[0]
+          && value.position[1] !== action.keyClicked.position[1]
+        )
+      })
+      // return state
     default:
       return state
   }
@@ -78,6 +88,15 @@ function playStatus(state = "stopped", action) {
   }
 }
 
+function simulateMode(state = false, action) {
+  switch (action.type) {
+    case actions.SET_SIMULATEMODE:
+      return action.simulateMode
+    default:
+      return state
+  }
+}
+
 function volume(state = 80, action) {
   switch (action.type) {
     case actions.SET_VOLUME:
@@ -106,13 +125,14 @@ function bpm(state = 104, action) {
 export default combineReducers({
   indexPlaying,
   keysPlaying,
-  keyClicked,
+  keysClicked,
   handPosition,
   playMode,
   playScale,
   playTuningKey,
   playLoopMode,
   playStatus,
+  simulateMode,
   bpm,
   volume,
 })
