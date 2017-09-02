@@ -65,7 +65,6 @@ const mapDispatchToProps = ({
 
 class ViolinDisplay extends Component {
   handlePointEvent(eventType, e, key) {
-    // console.log(eventType)
     switch (eventType) {
       case 'mousedown':
         this.props.setKeysClicked([key])
@@ -82,10 +81,9 @@ class ViolinDisplay extends Component {
         }
         break
       case 'touchend':
-        // console.log(key)
         if (e.touches.length === 0) {
-          // this.props.setKeysClicked(null)
-          this.props.removeKeyClicked(key)
+          this.props.setKeysClicked(null)
+          // this.props.removeKeyClicked(key)
         } else {
           this.props.removeKeyClicked(key)
         }
@@ -96,7 +94,6 @@ class ViolinDisplay extends Component {
     }
   }
   renderNote(dims, playSet, note, noteIndex, stringIndex) {
-
     // Positioning
     var cx = dims.STRING_XS[stringIndex]
     var cy = dims.NOTE_YS[noteIndex]

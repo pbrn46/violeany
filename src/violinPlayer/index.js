@@ -27,23 +27,24 @@ const mapDispatchToProps = ({
 class ViolinPlayer extends Component {
   constructor(props) {
     super(props)
-    this.synth = new Tone.PolySynth({
-      polyphony: 6,
-      voice: Tone.Synth,
-      // voice: Tone.MembraneSynth,
-    }).toMaster();
+    this.synth = new Tone.PolySynth(6, Tone.SimpleAM)
     this.synth.set({
       volume: Util.Violin.percentToDecibel(this.props.volume),
-      oscillator: {
-        type: "square",
-      },
       envelope: {
-        "attack" : 0.05,
-			  "decay" : 0.05,
-			  "sustain" : 0.9,
-			  "release" : 1.0,
+        "attack": 0.50,
+		    "decay": 0.15,
+		    "sustain": 1.0,
+		    "release": 0.5,
       },
     })
+
+    this.reverb = new Tone.Freeverb(0.3, 4000)
+    this.reverb.wet.value = 0.3;
+    this.delay = new Tone.PingPongDelay(0.1, 0.1)
+    this.delay.wet.value = 0.2;
+
+    this.synth.chain(this.delay, this.reverb, Tone.Master)
+
   }
   componentDidMount() {
     this.updateSequence()
@@ -173,10 +174,10 @@ class ViolinPlayer extends Component {
         else
           this.props.setIndexPlaying(index)
       }, time)
-      Tone.Draw.schedule(() => {
-        this.props.setKeysPlaying(null)
-      }, Tone.Time(time).add("8n"))
-    }, range, "4n").start("+0.1")
+      // Tone.Draw.schedule(() => {
+      //   this.props.setKeysPlaying(null)
+      // }, Tone.Time(time).add("8n"))
+    }, range, "8n").start("+0.1")
     if (Number.isInteger(this.props.bpm))
       Tone.Transport.bpm.value = this.props.bpm
     this.seq.loop = this.props.playLoopMode !== "ONCE"
