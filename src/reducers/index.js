@@ -97,7 +97,7 @@ function simulateMode(state = false, action) {
   }
 }
 
-function volume(state = 80, action) {
+function volume(state = 65, action) {
   switch (action.type) {
     case actions.SET_VOLUME:
       return action.volume

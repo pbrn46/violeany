@@ -31,7 +31,7 @@ class ViolinPlayer extends Component {
     this.synth.set({
       volume: Util.Violin.percentToDecibel(this.props.volume),
       envelope: {
-        "attack": 0.50,
+        "attack": 0.10,
 		    "decay": 0.15,
 		    "sustain": 1.0,
 		    "release": 0.5,
@@ -162,11 +162,26 @@ class ViolinPlayer extends Component {
       this.seq.dispose()
     }
     var playSet = this.getPlaySet()
-    var range = [...playSet.keys()]
-    this.seq = new Tone.Sequence((time, index) => {
+    var timeOffset = Tone.Time(0)
+    var parts = [...playSet.keys()].map((v) => {
+      let dur = playSet[v].dur
+      if (dur == null) {
+        dur = "4n"
+      }
+      let t = timeOffset.toNotation()
+      timeOffset = timeOffset.add(dur)
+      return [t, [v, dur]]
+    })
+
+    if (Number.isInteger(this.props.bpm))
+      Tone.Transport.bpm.value = this.props.bpm
+    this.seq = new Tone.Part((time, part) => {
+      let index = part[0]
       let setItem = playSet[index]
+      let dur = part[1]
       let note = Util.Violin.noteFromPosition(setItem.position)
-      this.synth.triggerAttackRelease(note, "8n", time)
+      if (note !== "r0")
+        this.synth.triggerAttackRelease(note, dur, time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying([setItem])
         if (this.props.playMode === "TUNING")
@@ -176,20 +191,21 @@ class ViolinPlayer extends Component {
       }, time)
       // Tone.Draw.schedule(() => {
       //   this.props.setKeysPlaying(null)
-      // }, Tone.Time(time).add("8n"))
-    }, range, "8n").start("+0.1")
-    if (Number.isInteger(this.props.bpm))
-      Tone.Transport.bpm.value = this.props.bpm
+      // }, Tone.Time(time).add("4n"))
+    }, parts).start("+0.1")
+    this.seq.loopEnd = timeOffset.toNotation()
     this.seq.loop = this.props.playLoopMode !== "ONCE"
   }
   play() {
     this.updateSequence()
+    console.log("hithi")
     Tone.Transport.lookAhead = 0.5
     Tone.Transport.start("+0.1")
   }
   stop() {
     this.props.setKeysPlaying(null)
     this.props.setIndexPlaying(null)
+    this.synth.releaseAll()
     Tone.Transport.stop()
   }
   render() {

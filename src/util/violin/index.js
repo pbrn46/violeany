@@ -56,6 +56,8 @@ export function generatePlaySet(playScale, playLoopMode) {
 }
 
 export function noteFromPosition(position) {
+  if (position[0] === -1 || position[1] === -1)
+    return "r0"
   return STRINGS_ARRAY[position[0]][position[1]]
 }
 

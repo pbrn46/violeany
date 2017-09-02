@@ -20,6 +20,9 @@ export const GRADE_SCALES = OrderedMap({
     "G mel min 1",
     "G nat min 1",
   ],
+  "Test": [
+    "test1"
+  ]
 })
 
 export default GRADE_SCALES

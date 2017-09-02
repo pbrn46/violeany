@@ -3,8 +3,21 @@ import { OrderedMap } from 'immutable'
 // D nat min 1 = D natural minor, one octave
 // TODO: position to notes may change sharps and flats. use key signature instead?
 // TODO: include note size (quarter, eigth, sixteenth, etc)
-
 export const SCALES = OrderedMap({
+  "test1": {
+    title: "Test 1",
+    keys: [
+      {position: [1, 0], finger: 0, dur: "4n"},
+      {position: [-1, -1], finger: -1, dur: "1n"},
+      {position: [1, 2], finger: 1},
+      {position: [1, 4], finger: 2},
+      {position: [1, 5], finger: 3},
+      {position: [2, 0], finger: 0},
+      {position: [2, 2], finger: 1},
+      {position: [2, 4], finger: 2},
+      {position: [2, 5], finger: 3},
+    ],
+  },
   "D maj 1": {
     title: "D major, one octave",
     keys: [
