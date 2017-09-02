@@ -79,10 +79,10 @@ function playLoopMode(state = "UPDOWN_NODOUBLE", action) {
   }
 }
 
-function playStatus(state = "stopped", action) {
+function transportStatus(state = "stopped", action) {
   switch (action.type) {
-    case actions.SET_PLAYSTATUS:
-      return action.playStatus
+    case actions.SET_TRANSPORTSTATUS:
+      return action.transportStatus
     default:
       return state
   }
@@ -122,6 +122,20 @@ function bpm(state = 104, action) {
   }
 }
 
+
+function isPlaying(state = false, action) {
+  switch (action.type) {
+    case actions.PLAY:
+      return true
+    case actions.STOP:
+      return false
+    case actions.SET_ISPLAYING:
+      return action.isPlaying
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   indexPlaying,
   keysPlaying,
@@ -131,8 +145,9 @@ export default combineReducers({
   playScale,
   playTuningKey,
   playLoopMode,
-  playStatus,
+  transportStatus,
   simulateMode,
   bpm,
   volume,
+  isPlaying,
 })

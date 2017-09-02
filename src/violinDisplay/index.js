@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
-import * as ViolinUtil from '../violinUtil'
+import * as Util from '../util'
 
 import './index.css'
 import View from './view'
@@ -107,14 +107,14 @@ class ViolinDisplay extends Component {
     // Fill Color
     if (this.props.playMode === "TUNING")
       playSet = {}
-    var positionIsInPLaySet = ViolinUtil.PlaySets.hasPosition(
+    var positionIsInPLaySet = Util.Violin.PlaySets.hasPosition(
       playSet, [stringIndex, noteIndex])
-    var isPlaying = ViolinUtil.PlaySets.hasPosition(
+    var isPlaying = Util.Violin.PlaySets.hasPosition(
       this.props.keysPlaying, [stringIndex, noteIndex])
     var isClicked = false
     if (this.props.keysClicked)
       isClicked =
-        ViolinUtil.PlaySets.hasPosition(
+        Util.Violin.PlaySets.hasPosition(
           this.props.keysClicked, [stringIndex, noteIndex])
     var fill = isClicked ? "#8ff" :
                isPlaying ? "#8f8" :
@@ -127,7 +127,7 @@ class ViolinDisplay extends Component {
     var key = {position: [stringIndex, noteIndex], finger: -1}
 
     // Text
-    var finger = ViolinUtil.PlaySets.fingerFromPosition(
+    var finger = Util.Violin.PlaySets.fingerFromPosition(
       [stringIndex, noteIndex], playSet)
     var noteBase = note[0]
     var octave = note[1]
@@ -192,7 +192,7 @@ class ViolinDisplay extends Component {
     return ret
   }
   render() {
-    var playSet = ViolinUtil.generatePlaySet(this.props.playScale, this.props.playLoopMode)
+    var playSet = Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
     var dims = makeDims(this.props.simulateMode)
     return (
       <View
@@ -207,7 +207,7 @@ class ViolinDisplay extends Component {
           stroke="#000"
           strokeWidth={dims.FIRST_ROW_MARGIN_Y / 2}
         />
-        {this.renderStrings(dims, playSet, ViolinUtil.STRINGS)}
+        {this.renderStrings(dims, playSet, Util.Violin.STRINGS)}
       </View>
     )
   }

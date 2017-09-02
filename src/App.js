@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 // Components
 import InfoButton from './infoButton'
+import Toolbar from './toolbar'
 import StaffDisplay from './staffDisplay'
 import ViolinDisplay from './violinDisplay'
 import ViolinPlayer from './violinPlayer'
@@ -13,6 +14,8 @@ class App extends Component {
   render() {
     return (
       <div className="container-fluid App">
+        <ViolinPlayer />
+
         <div className="row no-gutters align-items-center">
           <div className="col-auto">
             <h3>Violeany</h3>
@@ -24,7 +27,7 @@ class App extends Component {
         <div className="row no-gutters">
           <div className="col-12 col-sm order-1 order-sm-12">
             <div className="mb-2 mr-2">
-            <ViolinPlayer />
+            <Toolbar />
             </div>
             <div className="mb-2 mr-2">
             <StaffDisplay />

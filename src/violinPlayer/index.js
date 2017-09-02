@@ -1,50 +1,39 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import Tone from 'tone'
 import * as actions from '../actions'
 
-import * as ViolinUtil from '../violinUtil'
+import * as Util from '../util'
 
 import './index.css'
 
 const mapStateToProps = (store) => ({
-  keysPlaying: store.keysPlaying,
   keysClicked: store.keysClicked,
   playMode: store.playMode,
   playScale: store.playScale,
   playTuningKey: store.playTuningKey,
   playLoopMode: store.playLoopMode,
-  playStatus: store.playStatus,
   volume: store.volume,
   bpm: store.bpm,
-  simulateMode: store.simulateMode,
+  isPlaying: store.isPlaying,
 })
 
 const mapDispatchToProps = ({
-  setPlayMode: actions.setPlayMode,
-  setPlayScale: actions.setPlayScale,
-  setPlayTuningKey: actions.setPlayTuningKey,
-  setPlayLoopMode: actions.setPlayLoopMode,
   setKeysPlaying: actions.setKeysPlaying,
   setIndexPlaying: actions.setIndexPlaying,
-  setPlayStatus: actions.setPlayStatus,
-  setVolume: actions.setVolume,
-  setBpm: actions.setBpm,
-  setSimulateMode: actions.setSimulateMode,
+  setTransportStatus: actions.setTransportStatus,
 })
 
 class ViolinPlayer extends Component {
   constructor(props) {
     super(props)
-    this.handlePlayClick = this.handlePlayClick.bind(this)
-    this.handleStopClick = this.handleStopClick.bind(this)
     this.synth = new Tone.PolySynth({
       polyphony: 6,
       voice: Tone.Synth,
       // voice: Tone.MembraneSynth,
     }).toMaster();
     this.synth.set({
-      volume: ViolinUtil.percentToDecibel(this.props.volume),
+      volume: Util.Violin.percentToDecibel(this.props.volume),
       oscillator: {
         type: "square",
       },
@@ -70,6 +59,13 @@ class ViolinPlayer extends Component {
     Tone.Transport.off('loop', this.transportEventHandlers('loop'))
   }
   componentDidUpdate(prevProps) {
+    if (prevProps.isPlaying !== this.props.isPlaying) {
+      if (this.props.isPlaying)
+        this.play()
+      else
+        this.stop()
+    }
+
     // TODO: Instead of check for changes here, make an invalidating reducer
     if (prevProps.playMode !== this.props.playMode
         || prevProps.playScale !== this.props.playScale
@@ -80,7 +76,7 @@ class ViolinPlayer extends Component {
     }
 
     if (this.props.volume !== prevProps.volume) {
-      this.synth.set("volume", ViolinUtil.percentToDecibel(this.props.volume))
+      this.synth.set("volume", Util.Violin.percentToDecibel(this.props.volume))
     }
 
     if (this.props.keysClicked !== prevProps.keysClicked) {
@@ -89,12 +85,12 @@ class ViolinPlayer extends Component {
       let prevNotes = []
 
       for (let key of prevProps.keysClicked) {
-        note = ViolinUtil.noteFromPosition(
+        note = Util.Violin.noteFromPosition(
           key.position)
         prevNotes.push(note)
       }
       for (let key of this.props.keysClicked) {
-        note = ViolinUtil.noteFromPosition(
+        note = Util.Violin.noteFromPosition(
           key.position)
         notes.push(note)
       }
@@ -117,15 +113,15 @@ class ViolinPlayer extends Component {
       case 'start':
         if (this.handleTransportStart) return this.handleTransportStart
         return this.handleTransportStart =
-          (e) => this.props.setPlayStatus("started")
+          (e) => this.props.setTransportStatus("started")
       case 'stop':
         if (this.handleTransportStop) return this.handleTransportStop
         return this.handleTransportStop =
-          (e) => this.props.setPlayStatus("stopped")
+          (e) => this.props.setTransportStatus("stopped")
       case 'pause':
         if (this.handleTransportPause) return this.handleTransportPause
         return this.handleTransportPause =
-          (e) => this.props.setPlayStatus("paused")
+          (e) => this.props.setTransportStatus("paused")
       case 'loop':
         if (this.handleTransportLoop) return this.handleTransportLoop
         return this.handleTransportLoop =
@@ -157,7 +153,7 @@ class ViolinPlayer extends Component {
           return []
       }
     }
-    return ViolinUtil.generatePlaySet(this.props.playScale, this.props.playLoopMode)
+    return Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
   }
   updateSequence() {
     if (this.seq) {
@@ -168,7 +164,7 @@ class ViolinPlayer extends Component {
     var range = [...playSet.keys()]
     this.seq = new Tone.Sequence((time, index) => {
       let setItem = playSet[index]
-      let note = ViolinUtil.noteFromPosition(setItem.position)
+      let note = Util.Violin.noteFromPosition(setItem.position)
       this.synth.triggerAttackRelease(note, "8n", time)
       Tone.Draw.schedule(() => {
         this.props.setKeysPlaying([setItem])
@@ -195,186 +191,8 @@ class ViolinPlayer extends Component {
     this.props.setIndexPlaying(null)
     Tone.Transport.stop()
   }
-  handlePlayClick(e) {
-    this.play()
-  }
-  handleStopClick(e) {
-    this.stop()
-  }
   render() {
-    const PLAYLOOPMODE_OPTIONS = [
-      ["ONCE", "Once"],
-      ["UP", "Up"],
-      ["DOWN", "Down"],
-      ["UPDOWN", "UpDown"],
-      ["UPDOWN_NODOUBLE", "UpDown_NoDouble"],
-    ]
-    const PLAYMODE_OPTIONS = [
-      ["SCALES", "Scales"],
-      ["TUNING", "Tuning"],
-    ]
-    const PLAYSCALE_OPTIONS = [
-      ["---DIV1", "--- Grade 1 ---"],
-      ["D maj 1", "D major, one octave"],
-      ["A maj 1", "A major, one octaves"],
-      ["E nat min 1", "E natural minor, one octave"],
-      ["G maj 2", "G major, two octaves"],
-      ["---DIV2", "--- Grade 2 ---"],
-      ["G maj 2", "G major, two octaves"],
-      ["A maj 2", "A major, two octaves"],
-      ["Bb maj 2", "Bb major, two octaves"],
-      ["C maj 1", "C major, one octave"],
-      ["F maj 1", "F major, one octave"],
-      ["D har min 1", "D harmonic minor, one octave"],
-      ["D mel min 1", "D melodic minor, one octave"],
-      ["D nat min 1", "D natural minor, one octave"],
-      ["G har min 1", "G harmonic minor, one octave"],
-      ["G mel min 1", "G melodic minor, one octave"],
-      ["G nat min 1", "G natural minor, one octave"],
-    ]
-
-    const PLAYTUNINGKEY_OPTIONS = [
-      ["G", "G"],
-      ["D", "D"],
-      ["A", "A"],
-      ["E", "E"],
-      ["ALL", "All"],
-    ]
-    return (
-      <div className="ViolinPlayer">
-      <div className="form-inline mb-2">
-        <div className="input-group input-group mr-3">
-          <button
-            className={
-              "btn" +
-              (this.props.playStatus === "started" ? " btn-primary" : " btn-secondary")}
-            type="button"
-            onClick={this.handlePlayClick}
-          >Play</button>
-          <button
-            className={
-              "btn" +
-              (this.props.playStatus === "stopped" ? " btn-primary" : " btn-secondary")}
-            type="button"
-            onClick={this.handleStopClick}
-          >Stop</button>
-        </div>
-      </div>
-
-      <div className="form-inline mb-2">
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
-            Volume
-          </div>
-          <input type="text"
-            className="form-control"
-            value={this.props.volume}
-            onChange={(e) => this.props.setVolume(e.target.value)}
-            size={3}
-          />
-          <div className="input-group-addon">
-            ({ViolinUtil.percentToDecibel(this.props.volume)} dB)
-          </div>
-        </div>
-
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
-            BPM
-          </div>
-          <input type="text"
-            className="form-control"
-            value={this.props.bpm}
-            onChange={(e) => this.props.setBpm(e.target.value)}
-            size={3}
-          />
-        </div>
-      </div>
-
-      <div className="form-inline mb-2">
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
-            Play Mode
-          </div>
-          <select
-            className="custom-select custom-select-sm"
-            onChange={(e) => this.props.setPlayMode(e.target.value)}
-            value={this.props.playMode}>
-            {PLAYMODE_OPTIONS.map((v) => (
-              <option key={v[0]} value={v[0]}>
-                {v[1]}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {this.props.playMode === "TUNING" ? (
-           <div className="input-group input-group-sm mr-3">
-             <div className="input-group-addon">
-               Tuning Key
-             </div>
-             <select
-               className="custom-select custom-select-sm"
-               onChange={(e) => this.props.setPlayTuningKey(e.target.value)}
-               value={this.props.playTuningKey}>
-               {PLAYTUNINGKEY_OPTIONS.map((v) => (
-                 <option key={v[0]} value={v[0]}>
-                   {v[1]}
-                 </option>
-               ))}
-             </select>
-           </div>
-        ) : null}
-        {this.props.playMode === "SCALES" ? (
-           <div className="input-group input-group-sm mr-3">
-             <div className="input-group-addon">
-               Scale
-             </div>
-             <select
-               className="custom-select custom-select-sm"
-               onChange={(e) => this.props.setPlayScale(e.target.value)}
-               value={this.props.playScale}>
-               {PLAYSCALE_OPTIONS.map((v, i) => (
-                 <option key={i} value={v[0]}>
-                   {v[1]}
-                 </option>
-               ))}
-             </select>
-           </div>
-        ) : null}
-        {this.props.playMode === "SCALES" ? (
-           <div className="input-group input-group-sm mr-3">
-             <div className="input-group-addon">
-               Loop Mode
-             </div>
-             <select
-               className="custom-select custom-select-sm"
-               onChange={(e) => this.props.setPlayLoopMode(e.target.value)}
-               value={this.props.playLoopMode}>
-               {PLAYLOOPMODE_OPTIONS.map((v) => (
-                 <option key={v[0]} value={v[0]}>
-                   {v[1]}
-                 </option>
-               ))}
-             </select>
-           </div>
-        ) : null}
-      </div>
-      <div className="form-inline mb-2">
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
-            Simulate Mode
-          </div>
-          <select
-            className="custom-select custom-select-sm"
-            onChange={(e) => this.props.setSimulateMode(e.target.value === "true")}
-            value={this.props.simulateMode}>
-              <option value={true}>On</option>
-              <option value={false}>Off</option>
-          </select>
-        </div>
-      </div>
-      </div>
-    )
+    return (null)
   }
 }
 

@@ -52,10 +52,10 @@ export const setPlayLoopMode = (playLoopMode) => ({
   playLoopMode,
 })
 
-export const SET_PLAYSTATUS = "SET_PLAYSTATUS"
-export const setPlayStatus = (playStatus) => ({
-  type: SET_PLAYSTATUS,
-  playStatus,
+export const SET_TRANSPORTSTATUS = "SET_TRANSPORTSTATUS"
+export const setTransportStatus = (transportStatus) => ({
+  type: SET_TRANSPORTSTATUS,
+  transportStatus,
 })
 
 export const SET_SIMULATEMODE = "SET_SIMULATEMODE"
@@ -74,4 +74,21 @@ export const SET_BPM = "SET_BPM"
 export const setBpm = (bpm) => ({
   type: SET_BPM,
   bpm,
+})
+
+export const SET_ISPLAYING = "SET_ISPLAYING"
+export const setIsPlaying = (isPlaying) => ({
+  type: SET_ISPLAYING,
+  isPlaying,
+})
+
+export const PLAY = "PLAY"
+export const play = () => ({
+  type: PLAY,
+})
+
+export const STOP = "STOP"
+export const stop = () => ({
+  type: STOP,
+  stop,
 })
