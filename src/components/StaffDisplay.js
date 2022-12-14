@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 import * as Util from '../util'
 
-import './index.css'
-
 const PADL_X = 30
 const PADR_X = 30
 const TRIMT_Y = 13  // Amount of notes to take off of top
@@ -197,7 +195,7 @@ class StaffDisplay extends Component {
         style={{ overflowX: "auto" }}>
         <div
           style={{ width: "0px" }}>
-          <svg className="StaffDisplay"
+          <svg className="StaffDisplay tw-border tw-border-black"
             height={SVG_HEIGHT}
             style={{
               width: svgWidth,

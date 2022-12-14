@@ -4,7 +4,7 @@ import * as actions from '../actions'
 
 import * as Util from '../util'
 
-import './index.css'
+// import './index.css'
 
 const mapStateToProps = (store) => ({
   playMode: store.playMode,

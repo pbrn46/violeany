@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 
-import InfoButton from './infoButton'
-import Toolbar from './toolbar'
-import StaffDisplay from './staffDisplay'
-import ViolinDisplay from './violinDisplay'
-import ViolinPlayer from './violinPlayer'
+import InfoButton from './components/InfoButton'
+import Toolbar from './components/Toolbar'
+import StaffDisplay from './components/StaffDisplay'
+import ViolinDisplay from './components/ViolinDisplay'
+import ViolinPlayer from './components/ViolinPlayer'
 
 import { store } from "./redux/store"
 
@@ -30,34 +30,34 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div className="container-fluid App">
+        <div className="container-fluid mx-auto App">
           <ViolinPlayer />
 
-          <div className="row no-gutters align-items-center">
-            <div className="col-auto">
+          <div className="tw-flex tw-items-center">
+            <div className="">
               <h3>Violeany</h3>
             </div>
-            <div className="col">
+            <div className="grow">
               <InfoButton />
             </div>
           </div>
-          <div className="row no-gutters">
-            <div className="col-12 col-sm order-1 order-sm-12">
-              <div className="mb-2 mr-2">
+          <div className="tw-grid sm:tw-flex tw-grid-cols-12">
+            <div className="tw-order-1 sm:tw-order-12 tw-col-span-12 sm:tw-flex-grow">
+              <div className="tw-mb-2 tw-mr-2">
                 <Toolbar />
               </div>
-              <div className="mb-2 mr-2">
+              <div className="tw-mb-2 tw-mr-2">
                 <StaffDisplay />
               </div>
             </div>
-            <div className="col-12 col-sm-auto order-12 order-sm-1">
-              <div className="mb-2 mr-2">
+            <div className="tw-order-12 sm:tw-order-1 tw-col-span-12">
+              <div className="tw-mb-2 tw-mr-2">
                 <ViolinDisplay />
               </div>
             </div>
           </div>
-          <div className="small text-center mr-3">
-            By Boris Wong, Copyright 2017, All Rights Reserved
+          <div className="tw-text-sm tw-text-center tw-mr-3">
+            By Boris Wong, Copyright 2022, All Rights Reserved
           </div>
         </div>
       </Provider>

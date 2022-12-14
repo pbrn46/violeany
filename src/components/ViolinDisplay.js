@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 import * as Util from '../util'
 
-import './index.css'
-import View from './view'
+import View from './ViolinDisplayView'
 
 function makeDims(isSimulateMode) {
   // TODO: Move these dimensions into its own object

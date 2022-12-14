@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 
-import './index.css'
-
 class InfoButton extends Component {
   render() {
     return (
       <div className="InfoButton">
         <button type="button"
-          className="InfoButton"
+          className="InfoButton tw-p-2.5 hover:tw-bg-gray-200 focus:tw-outline-0 focus:tw-bg-gray-200"
           data-toggle="modal"
           data-target="#InfoButton-modal"
           style={{lineHeight: "10px"}}>

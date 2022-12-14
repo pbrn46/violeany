@@ -5,8 +5,6 @@ import * as actions from '../actions'
 
 import * as Util from '../util'
 
-import './index.css'
-
 const mapStateToProps = (store) => ({
   keysClicked: store.keysClicked,
   playMode: store.playMode,
