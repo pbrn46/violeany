@@ -145,6 +145,7 @@ export function useViolinPlayer() {
       if (note !== "r0")
         synth.triggerAttackRelease(note, dur, time)
       Tone.Draw.schedule(() => {
+        if (Tone.Transport.state !== "started") return
         dispatch(setKeysPlaying([setItem]))
         if (playMode === "TUNING")
           dispatch(setIndexPlaying(null))
