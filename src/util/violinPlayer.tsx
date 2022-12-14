@@ -121,22 +121,26 @@ export function useViolinPlayer() {
       seq.stop()
       seq.dispose()
     }
+
+    // Make sure bpm is up to date
+    if (Number.isInteger(bpm))
+      Tone.Transport.bpm.value = bpm
+
     const playSet = getPlaySet()
-    let timeOffset = Tone.Time(0)
+    let timeOffset = 0
     const parts = [...playSet.keys()].map((v) => {
       let dur = playSet[v].dur
       if (dur == null) {
         dur = "4n"
       }
-      let t = timeOffset.toNotation()
-      timeOffset = Tone.Time(timeOffset.valueOf() + Tone.Time(dur).valueOf()) //.add(dur).valueOf
+      let t = timeOffset
+      timeOffset = timeOffset + Tone.Time(dur).toSeconds()
       return [t, [v, dur]]
     })
 
     seq = new Tone.Part((time, part) => {
-      let index = part[0]
+      let [index, dur] = part as [number, string]
       let setItem = playSet[index]
-      let dur = part[1]
       let note = Util.Violin.noteFromPosition(setItem.position)
       if (note !== "r0")
         synth.triggerAttackRelease(note, dur, time)
@@ -148,12 +152,12 @@ export function useViolinPlayer() {
           dispatch(setIndexPlaying(index))
       }, time)
     }, parts).start("+0.1")
-    seq.loopEnd = timeOffset.toNotation()
+    seq.loopEnd = timeOffset
     seq.loop = playLoopMode !== "ONCE"
 
     seqRef.current = seq
 
-  }, [dispatch, getPlaySet, playLoopMode, playMode])
+  }, [bpm, dispatch, getPlaySet, playLoopMode, playMode])
 
   const play = useCallback(() => {
     updateSequence()
