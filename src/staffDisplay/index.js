@@ -5,9 +5,6 @@ import * as Util from '../util'
 
 import './index.css'
 
-const SharpSvg = require('../assets/sharp.svg')
-const FlatSvg = require('../assets/flat.svg')
-
 const PADL_X = 30
 const PADR_X = 30
 const TRIMT_Y = 13  // Amount of notes to take off of top
@@ -60,7 +57,7 @@ const STAFF_LINE_NOTES = ["G2", "B2", "D3", "F3", "A3",
   "E4", "G4", "B4", "D5", "F5",]
 
 const STAFF_LINE_YS = (() => {
-  var staffYs =[]
+  var staffYs = []
   for (let i = 0; i < STAFF_LINE_NOTES.length; i++) {
     let note = STAFF_LINE_NOTES[i]
     staffYs.push(NoteToY(note))
@@ -114,7 +111,7 @@ class StaffDisplay extends Component {
         Util.Violin.PlaySets.hasPosition(
           this.props.keysClicked, key.position)
     var fill = isClicked ? "#8ff" :
-               isPlaying ? "#8f8" : "#000"
+      isPlaying ? "#8f8" : "#000"
     var transition = "fill 0.0s"
     if (!isClicked && !isPlaying)
       transition = "fill 0.5s"
@@ -122,20 +119,15 @@ class StaffDisplay extends Component {
     // TODO: Use key signatures instead
     var accidentalSvg = null
     if (noteAccidental) {
-      accidentalSvg = (
-        <image
-          xlinkHref={
-            noteAccidental === "b" ?
-                     FlatSvg
-                   : noteAccidental === "#" ? SharpSvg
-                   : ""
-          }
-          x={cx - NOTE_RADIUS * 3}
-          y={cy - NOTE_RADIUS * 1.25}
-          height={NOTE_RADIUS * 2.5}
-          width={NOTE_RADIUS * 2.5}
-        />
-      )
+      accidentalSvg = <text
+        x={cx - NOTE_RADIUS * 1.75}
+        y={cy + NOTE_RADIUS + (noteAccidental === "b" ? -1 : 3)}
+        // x={cx}
+        // y={cy + NOTE_FONT_SIZE / 2 - NOTE_RADIUS - 10}
+        textAnchor="middle"
+        fontSize={NOTE_RADIUS * 3.00}>
+        {noteAccidental === "b" ? "♭" : noteAccidental === "#" ? "♯" : " "}
+      </text>
     }
     // TODO: C4 (and other floating notes as necessary) needs a horizontal line
     return (
@@ -148,7 +140,7 @@ class StaffDisplay extends Component {
           r={NOTE_RADIUS - STROKE_WIDTH}
           stroke="#000"
           strokeWidth={STROKE_WIDTH}
-          style={{fill: fill, transition: transition}}
+          style={{ fill: fill, transition: transition }}
         />
         {accidentalSvg}
         <text
@@ -161,14 +153,14 @@ class StaffDisplay extends Component {
             fontSize={OCTAVE_FONT_SIZE}>
             {octave}</tspan></text>
         {finger !== null ? (
-           <text
-             x={cx}
-             y={cy
-               + NOTE_RADIUS
-               + FINGER_FONT_SIZE}
-             textAnchor="middle"
-             fontSize={FINGER_FONT_SIZE}>
-             {finger}</text>
+          <text
+            x={cx}
+            y={cy
+              + NOTE_RADIUS
+              + FINGER_FONT_SIZE}
+            textAnchor="middle"
+            fontSize={FINGER_FONT_SIZE}>
+            {finger}</text>
         ) : null}
       </g>
     )
@@ -202,9 +194,9 @@ class StaffDisplay extends Component {
       <div
         className="StaffDisplay"
         ref={el => this.scrollBox = window.$(el)}
-        style={{overflowX: "auto"}}>
+        style={{ overflowX: "auto" }}>
         <div
-          style={{width: "0px"}}>
+          style={{ width: "0px" }}>
           <svg className="StaffDisplay"
             height={SVG_HEIGHT}
             style={{
