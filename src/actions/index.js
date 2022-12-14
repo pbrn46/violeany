@@ -90,5 +90,4 @@ export const play = () => ({
 export const STOP = "STOP"
 export const stop = () => ({
   type: STOP,
-  stop,
 })
