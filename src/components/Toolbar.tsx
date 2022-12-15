@@ -64,19 +64,6 @@ export function Toolbar() {
   return <div className="Toolbar tw-grid tw-gap-2">
 
     <div className="tw-flex tw-gap-2">
-      <button
-        className={`tw-btn ${transportStatus === "started" ? "active" : ""}`}
-        type="button"
-        onClick={handlePlayClick}
-      >Play</button>
-      <button
-        className={`tw-btn ${transportStatus === "stopped" ? "active" : ""}`}
-        type="button"
-        onClick={handleStopClick}
-      >Stop</button>
-    </div>
-
-    <div className="tw-flex tw-gap-2">
       <div className="tw-input-group">
         <div className="tw-input-label">
           Volume
@@ -196,6 +183,19 @@ export function Toolbar() {
           <small>(experimental)</small>
         </div>
       </div>
+    </div>
+
+    <div className="tw-flex tw-gap-2">
+      <button
+        className={`tw-btn ${transportStatus === "started" ? "active" : ""}`}
+        type="button"
+        onClick={handlePlayClick}
+      >Play</button>
+      <button
+        className={`tw-btn ${transportStatus === "stopped" ? "active" : ""}`}
+        type="button"
+        onClick={handleStopClick}
+      >Stop</button>
     </div>
   </div>
 }
