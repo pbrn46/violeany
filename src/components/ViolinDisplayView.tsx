@@ -8,7 +8,7 @@ type ViewProps = {
   dims: ReturnType<typeof makeDims>
 }
 
-export function View({ children, dims }: ViewProps) {
+export function ViolinDisplayView({ children, dims }: ViewProps) {
   const simulateMode = useAppSelector(state => state.simulateMode)
   return <div className={(simulateMode ? "tw-text-right " : "tw-text-center ") + "ViolinDisplay tw-border tw-border-black"}>
     <svg className="ViolinDisplay"

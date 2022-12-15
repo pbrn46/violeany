@@ -8,7 +8,7 @@ export { GRADE_SCALES }
 export type Position = [number, number]
 
 // Position 1 goes to index 7 of each string
-export const STRINGS = OrderedMap<string, string[]>([
+export const STRINGS = OrderedMap<string, String>([
   ["G", ["G3", "Ab3", "A3", "Bb3", "B3", "C4", "C#4", "D4",
     "Eb4", "E4", "F4", "F#4", "G4"]],
   ["D", ["D4", "Eb4", "E4", "F4", "F#4", "G4", "G#4", "A4",
@@ -20,6 +20,8 @@ export const STRINGS = OrderedMap<string, string[]>([
 ])
 export const STRINGS_ARRAY = STRINGS.toIndexedSeq().toArray()
 
+export type Strings = typeof STRINGS
+export type String = string[]
 
 export const NOTES = [
   "C1", "D1", "E1", "F1", "G1", "A1", "B1",
@@ -38,7 +40,7 @@ export type Key = {
   downPosition?: Position
 }
 export type PlayLoopMode = "UP" | "DOWN" | "UPDOWN" | "UPDOWN_NODOUBLE" | "ONCE"
-type PlaySet = Key[]
+export type PlaySet = Key[]
 
 export function generatePlaySet(playScale: string, playLoopMode: PlayLoopMode) {
   const playSet = SCALES.get(playScale).keys
