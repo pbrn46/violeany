@@ -1,5 +1,5 @@
 import InfoButton from "./components/InfoButton"
-import StaffDisplay from "./components/StaffDisplay"
+import {StaffDisplay} from "./components/StaffDisplay"
 import { Toolbar } from "./components/Toolbar"
 import { ViolinDisplay } from "./components/ViolinDisplay"
 import { useViolinPlayer } from "./util/violinPlayer"
