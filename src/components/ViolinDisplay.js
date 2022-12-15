@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 import * as Util from '../util'
 
-import View from './ViolinDisplayView'
+import { View } from './ViolinDisplayView'
 
-function makeDims(isSimulateMode) {
+export function makeDims(isSimulateMode) {
   // TODO: Move these dimensions into its own object
   const NOTE_RADIUS = isSimulateMode ? 30 : 25
   const FIRST_ROW_MARGIN_Y = 10
@@ -24,7 +24,7 @@ function makeDims(isSimulateMode) {
     3 * NOTE_DISTANCE_X + NOTE_RADIUS,
   ]
   const NOTE_YS = (() => {
-    var noteYs = []
+    const noteYs = []
     for (let i = 0; i < 13; i++) {
       noteYs.push(i * NOTE_DISTANCE_Y + NOTE_RADIUS)
     }
@@ -94,8 +94,8 @@ class ViolinDisplay extends Component {
   }
   renderNote(dims, playSet, note, noteIndex, stringIndex) {
     // Positioning
-    var cx = dims.STRING_XS[stringIndex]
-    var cy = dims.NOTE_YS[noteIndex]
+    let cx = dims.STRING_XS[stringIndex]
+    let cy = dims.NOTE_YS[noteIndex]
     if (noteIndex !== 0) {
       cy += dims.FIRST_ROW_MARGIN_Y
     }
@@ -103,30 +103,30 @@ class ViolinDisplay extends Component {
     // Fill Color
     if (this.props.playMode === "TUNING")
       playSet = {}
-    var positionIsInPLaySet = Util.Violin.PlaySets.hasPosition(
+    const positionIsInPLaySet = Util.Violin.PlaySets.hasPosition(
       playSet, [stringIndex, noteIndex])
-    var isPlaying = Util.Violin.PlaySets.hasPosition(
+    const isPlaying = Util.Violin.PlaySets.hasPosition(
       this.props.keysPlaying, [stringIndex, noteIndex])
-    var isClicked = false
+    let isClicked = false
     if (this.props.keysClicked)
       isClicked =
         Util.Violin.PlaySets.hasPosition(
           this.props.keysClicked, [stringIndex, noteIndex])
-    var fill = isClicked ? "#8ff" :
-               isPlaying ? "#8f8" :
-               positionIsInPLaySet ? "#ff8" : "#fff"
-    var transition = "fill 0.1s"
+    const fill = isClicked ? "#8ff" :
+      isPlaying ? "#8f8" :
+        positionIsInPLaySet ? "#ff8" : "#fff"
+    let transition = "fill 0.1s"
     if (!isClicked && !isPlaying)
       transition = "fill 1s"
 
     // Event callback data
-    var key = {position: [stringIndex, noteIndex], finger: -1}
+    const key = { position: [stringIndex, noteIndex], finger: -1 }
 
     // Text
-    var finger = Util.Violin.PlaySets.fingerFromPosition(
+    const finger = Util.Violin.PlaySets.fingerFromPosition(
       [stringIndex, noteIndex], playSet)
-    var noteBase = note[0]
-    var octave = note[1]
+    let noteBase = note[0]
+    let octave = note[1]
     if (note.length >= 3) {
       noteBase += note[1]
       octave = note[2]
@@ -142,7 +142,7 @@ class ViolinDisplay extends Component {
           r={dims.NOTE_RADIUS - dims.STROKE_WIDTH}
           stroke="#000"
           strokeWidth={dims.STROKE_WIDTH}
-          style={{fill: fill, transition: transition}}
+          style={{ fill: fill, transition: transition }}
           onMouseDown={e => this.handlePointEvent('mousedown', e, key)}
           onMouseUp={e => this.handlePointEvent('mouseup', e, key)}
           onMouseOut={e => this.handlePointEvent('mouseout', e, key)}
@@ -159,28 +159,28 @@ class ViolinDisplay extends Component {
             fontSize={dims.OCTAVE_FONT_SIZE}>
             {octave}</tspan></text>
         {finger !== null ? (
-           <text
-             x={cx}
-             y={cy
-               + dims.NOTE_FONT_SIZE / 2
-               + dims.FINGER_FONT_SIZE - 2}
-             textAnchor="middle"
-             fontSize={dims.FINGER_FONT_SIZE}>
-             {finger}</text>
+          <text
+            x={cx}
+            y={cy
+              + dims.NOTE_FONT_SIZE / 2
+              + dims.FINGER_FONT_SIZE - 2}
+            textAnchor="middle"
+            fontSize={dims.FINGER_FONT_SIZE}>
+            {finger}</text>
         ) : null}
       </g>
     )
   }
   renderString(dims, playSet, string, stringIndex) {
-    var ret = []
+    const ret = []
     for (let i = 0; i < string.length; i++) {
       ret.push(this.renderNote(dims, playSet, string[i], i, stringIndex))
     }
     return ret
   }
   renderStrings(dims, playSet, strings) {
-    var ret = []
-    var index = 0
+    const ret = []
+    let index = 0
     strings.forEach((v, k) => {
       ret.push(this.renderString(dims, playSet, v, index))
       index++
@@ -188,24 +188,19 @@ class ViolinDisplay extends Component {
     return ret
   }
   render() {
-    var playSet = Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
-    var dims = makeDims(this.props.simulateMode)
-    return (
-      <View
-        {...this.props}
-        dims={dims}
-        >
-        <line
-          x1={0}
-          x2={dims.SVG_WIDTH}
-          y1={dims.NOTE_RADIUS * 2 + dims.FIRST_ROW_MARGIN_Y / 2}
-          y2={dims.NOTE_RADIUS * 2 + dims.FIRST_ROW_MARGIN_Y / 2}
-          stroke="#000"
-          strokeWidth={dims.FIRST_ROW_MARGIN_Y / 2}
-        />
-        {this.renderStrings(dims, playSet, Util.Violin.STRINGS)}
-      </View>
-    )
+    const playSet = Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
+    const dims = makeDims(this.props.simulateMode)
+    return <View {...this.props} dims={dims}>
+      <line
+        x1={0}
+        x2={dims.SVG_WIDTH}
+        y1={dims.NOTE_RADIUS * 2 + dims.FIRST_ROW_MARGIN_Y / 2}
+        y2={dims.NOTE_RADIUS * 2 + dims.FIRST_ROW_MARGIN_Y / 2}
+        stroke="#000"
+        strokeWidth={dims.FIRST_ROW_MARGIN_Y / 2}
+      />
+      {this.renderStrings(dims, playSet, Util.Violin.STRINGS)}
+    </View>
   }
 }
 
