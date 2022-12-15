@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react"
 import * as Tone from "tone"
 import { setIndexPlaying, setKeysPlaying, setTransportStatus } from "../actions"
 import { useAppDispatch, useAppSelector } from "../redux/store"
-import * as Util from "./index"
+import { generatePlaySet, Key, noteFromPosition, percentToDecibel } from "./violin"
 
 // Ref: view-source:https://tonejs.github.io/examples/polySynth
 
@@ -31,7 +31,7 @@ export function useViolinPlayer() {
         }
       }) // .toDestination() // (6, Tone.SimpleAM)
       synth.set({
-        volume: Util.Violin.percentToDecibel(volume),
+        volume: percentToDecibel(volume),
         envelope: {
           "attack": 0.10,
           "decay": 0.15,
@@ -88,7 +88,7 @@ export function useViolinPlayer() {
 
   const seqRef = useRef<Tone.Part | null>(null)
 
-  const getPlaySet = useCallback(() => {
+  const getPlaySet = useCallback((): Key[] => {
     if (playMode === "TUNING") {
       switch (playTuningKey) {
         case "G":
@@ -110,7 +110,7 @@ export function useViolinPlayer() {
           return []
       }
     }
-    return Util.Violin.generatePlaySet(playScale, playLoopMode)
+    return generatePlaySet(playScale, playLoopMode)
   }, [playLoopMode, playMode, playScale, playTuningKey])
 
   const updateSequence = useCallback(() => {
@@ -128,8 +128,8 @@ export function useViolinPlayer() {
 
     const playSet = getPlaySet()
     let timeOffset = 0
-    const parts = [...playSet.keys()].map((v) => {
-      let dur = playSet[v].dur
+    const parts = playSet.map((key, v) => {
+      let dur = key.dur
       if (dur == null) {
         dur = "4n"
       }
@@ -141,7 +141,7 @@ export function useViolinPlayer() {
     seq = new Tone.Part((time, part) => {
       let [index, dur] = part as [number, string]
       let setItem = playSet[index]
-      let note = Util.Violin.noteFromPosition(setItem.position)
+      let note = noteFromPosition(setItem.position)
       if (note !== "r0")
         synth.triggerAttackRelease(note, dur, time)
       Tone.Draw.schedule(() => {
@@ -186,7 +186,7 @@ export function useViolinPlayer() {
 
   useEffect(() => {
     synthRef.current?.set({
-      volume: Util.Violin.percentToDecibel(volume)
+      volume: percentToDecibel(volume)
     })
   }, [volume])
 
@@ -199,7 +199,7 @@ export function useViolinPlayer() {
     if (!synth) return
 
     const notes = keysClicked.map((note: any) =>
-      Util.Violin.noteFromPosition(note.position))
+      noteFromPosition(note.position))
 
     const prevNotes = notesRef.current || []
 

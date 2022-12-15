@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
 import { play, setBpm, setPlayLoopMode, setPlayMode, setPlayScale, setPlayTuningKey, setSimulateMode, setVolume, stop } from '../actions'
 import { useAppDispatch, useAppSelector } from '../redux/store'
-
-import * as Util from '../util'
+import { GRADE_SCALES, SCALES, percentToDecibel } from "../util/violin"
 
 const PLAYLOOPMODE_OPTIONS = [
   ["ONCE", "Once"],
@@ -16,14 +15,14 @@ const PLAYMODE_OPTIONS = [
   ["TUNING", "Tuning"],
 ]
 
-const PLAYSCALE_OPTIONS = Util.Violin.GRADE_SCALES.reduce((acc, v, k) => {
+const PLAYSCALE_OPTIONS = GRADE_SCALES.reduce((acc, v, k) => {
   // Add heading/divider
   if (!acc) return []
   if (!v) return []
   acc.push([null, "--- " + k + " ---"])
 
   acc = acc.concat(v.reduce((acc, v) => {
-    let scale = Util.Violin.SCALES.get(v)
+    let scale = SCALES.get(v)
     if (scale)
       acc.push([v, scale.title])
     return acc
@@ -75,7 +74,7 @@ export function Toolbar() {
           size={3}
         />
         <div className="tw-input-label">
-          ({Util.Violin.percentToDecibel(volume)} dB)
+          ({percentToDecibel(volume)} dB)
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
-import * as Util from '../util'
+import { maxNoteIndex, generatePlaySet, noteToIndex, NOTES, noteFromPosition, PlaySets } from "../util/violin"
 
 const PADL_X = 30
 const PADR_X = 30
@@ -14,7 +14,7 @@ const NOTE_FONT_SIZE = 12
 const OCTAVE_FONT_SIZE = 10
 const FINGER_FONT_SIZE = 12
 const STROKE_WIDTH = 1
-const SVG_HEIGHT = NOTE_DISTANCE_Y * (Util.Violin.maxNoteIndex() - 1) + NOTE_RADIUS * 2 + 2 - TRIMT_Y * NOTE_DISTANCE_Y - TRIMB_Y * NOTE_DISTANCE_Y
+const SVG_HEIGHT = NOTE_DISTANCE_Y * (maxNoteIndex() - 1) + NOTE_RADIUS * 2 + 2 - TRIMT_Y * NOTE_DISTANCE_Y - TRIMB_Y * NOTE_DISTANCE_Y
 // const SVG_WIDTH = "600px"
 // From G3 to E6 (34 total?)
 
@@ -36,7 +36,7 @@ const NoteToY = (note) => {
   if (note.length >= 3) {
     octave = note[2]
   }
-  var cy = Util.Violin.noteToIndex(noteBase + octave)
+  var cy = noteToIndex(noteBase + octave)
   cy *= NOTE_DISTANCE_Y
   cy += NOTE_RADIUS
   cy = SVG_HEIGHT - cy + TRIMB_Y * NOTE_DISTANCE_Y
@@ -44,8 +44,8 @@ const NoteToY = (note) => {
 }
 const NOTE_YS = (() => {
   var noteYs = {}
-  for (let i = 0; i < Util.Violin.NOTES.length; i++) {
-    let note = Util.Violin.NOTES[i]
+  for (let i = 0; i < NOTES.length; i++) {
+    let note = NOTES[i]
     noteYs[note] = NoteToY(note)
   }
   return noteYs
@@ -84,7 +84,7 @@ class StaffDisplay extends Component {
   }
   renderNote(playSet, index, key) {
     // Note
-    var note = Util.Violin.noteFromPosition(key.position)
+    var note = noteFromPosition(key.position)
     var finger = key.finger
     var noteBase = note[0]
     var noteAccidental = null
@@ -106,7 +106,7 @@ class StaffDisplay extends Component {
       //   this.props.keysClicked.position[0] === key.position[0] &&
       //   this.props.keysClicked.position[1] === key.position[1]
       isClicked =
-        Util.Violin.PlaySets.hasPosition(
+        PlaySets.hasPosition(
           this.props.keysClicked, key.position)
     var fill = isClicked ? "#8ff" :
       isPlaying ? "#8f8" : "#000"
@@ -186,7 +186,7 @@ class StaffDisplay extends Component {
     return ret
   }
   render() {
-    var playSet = Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
+    var playSet = generatePlaySet(this.props.playScale, this.props.playLoopMode)
     var svgWidth = (playSet.length - 1) * NOTE_DISTANCE_X + NOTE_RADIUS * 2 + PADL_X + PADR_X
     return (
       <div

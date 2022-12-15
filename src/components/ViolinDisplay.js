@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import * as actions from '../actions'
-import * as Util from '../util'
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import * as actions from "../actions"
+import { STRINGS, generatePlaySet, PlaySets } from "../util/violin"
 
-import { View } from './ViolinDisplayView'
+import { View } from "./ViolinDisplayView"
 
 export function makeDims(isSimulateMode) {
   // TODO: Move these dimensions into its own object
@@ -103,14 +103,14 @@ class ViolinDisplay extends Component {
     // Fill Color
     if (this.props.playMode === "TUNING")
       playSet = {}
-    const positionIsInPLaySet = Util.Violin.PlaySets.hasPosition(
+    const positionIsInPLaySet = PlaySets.hasPosition(
       playSet, [stringIndex, noteIndex])
-    const isPlaying = Util.Violin.PlaySets.hasPosition(
+    const isPlaying = PlaySets.hasPosition(
       this.props.keysPlaying, [stringIndex, noteIndex])
     let isClicked = false
     if (this.props.keysClicked)
       isClicked =
-        Util.Violin.PlaySets.hasPosition(
+        PlaySets.hasPosition(
           this.props.keysClicked, [stringIndex, noteIndex])
     const fill = isClicked ? "#8ff" :
       isPlaying ? "#8f8" :
@@ -123,7 +123,7 @@ class ViolinDisplay extends Component {
     const key = { position: [stringIndex, noteIndex], finger: -1 }
 
     // Text
-    const finger = Util.Violin.PlaySets.fingerFromPosition(
+    const finger = PlaySets.fingerFromPosition(
       [stringIndex, noteIndex], playSet)
     let noteBase = note[0]
     let octave = note[1]
@@ -188,7 +188,7 @@ class ViolinDisplay extends Component {
     return ret
   }
   render() {
-    const playSet = Util.Violin.generatePlaySet(this.props.playScale, this.props.playLoopMode)
+    const playSet = generatePlaySet(this.props.playScale, this.props.playLoopMode)
     const dims = makeDims(this.props.simulateMode)
     return <View {...this.props} dims={dims}>
       <line
@@ -199,7 +199,7 @@ class ViolinDisplay extends Component {
         stroke="#000"
         strokeWidth={dims.FIRST_ROW_MARGIN_Y / 2}
       />
-      {this.renderStrings(dims, playSet, Util.Violin.STRINGS)}
+      {this.renderStrings(dims, playSet, STRINGS)}
     </View>
   }
 }
