@@ -61,48 +61,43 @@ export function Toolbar() {
 
   const [playScaleIndex, setPlayScaleIndex] = useState<number | null>(PLAYSCALE_OPTIONS.findIndex(v => playScale === v[0]))
 
-  return <div className="Toolbar">
-    <div className="form-inline mb-2">
-      <div className="input-group input-group mr-3">
-        <button
-          className={
-            "btn" +
-            (transportStatus === "started" ? " btn-primary" : " btn-secondary")}
-          type="button"
-          onClick={handlePlayClick}
-        >Play</button>
-        <button
-          className={
-            "btn" +
-            (transportStatus === "stopped" ? " btn-primary" : " btn-secondary")}
-          type="button"
-          onClick={handleStopClick}
-        >Stop</button>
-      </div>
+  return <div className="Toolbar tw-grid tw-gap-2">
+
+    <div className="tw-flex tw-gap-2">
+      <button
+        className={`tw-btn ${transportStatus === "started" ? "active" : ""}`}
+        type="button"
+        onClick={handlePlayClick}
+      >Play</button>
+      <button
+        className={`tw-btn ${transportStatus === "stopped" ? "active" : ""}`}
+        type="button"
+        onClick={handleStopClick}
+      >Stop</button>
     </div>
 
-    <div className="form-inline mb-2">
-      <div className="input-group input-group-sm mr-3">
-        <div className="input-group-addon">
+    <div className="tw-flex tw-gap-2">
+      <div className="tw-input-group">
+        <div className="tw-input-label">
           Volume
         </div>
         <input type="text"
-          className="form-control"
+          className="tw-input"
           value={volume}
           onChange={(e) => dispatch(setVolume(e.target.value))}
           size={3}
         />
-        <div className="input-group-addon">
+        <div className="tw-input-label">
           ({Util.Violin.percentToDecibel(volume)} dB)
         </div>
       </div>
 
-      <div className="input-group input-group-sm mr-3">
-        <div className="input-group-addon">
+      <div className="tw-input-group">
+        <div className="tw-input-label">
           BPM
         </div>
         <input type="text"
-          className="form-control"
+          className="tw-input"
           value={bpm}
           onChange={(e) => dispatch(setBpm(e.target.value))}
           size={3}
@@ -110,73 +105,70 @@ export function Toolbar() {
       </div>
     </div>
 
-    <div className="form-inline mb-2">
-      <div className="input-group input-group-sm mr-3">
-        <div className="input-group-addon">
+    <div className="tw-flex tw-gap-2">
+      <div className="tw-input-group">
+        <div className="tw-input-label">
           Play Mode
         </div>
         <select
-          className="custom-select custom-select-sm"
+          className="tw-input"
           onChange={(e) => dispatch(setPlayMode(e.target.value))}
           value={playMode}>
-          {PLAYMODE_OPTIONS.map((v) => (
+          {PLAYMODE_OPTIONS.map((v) =>
             <option key={v[0]} value={v[0]}>
               {v[1]}
             </option>
-          ))}
+          )}
         </select>
       </div>
 
-      {playMode === "TUNING" ? (
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
+      {playMode === "TUNING" ?
+        <div className="tw-input-group">
+          <div className="tw-input-label">
             Tuning Key
           </div>
           <select
-            className="custom-select custom-select-sm"
+            className="tw-input"
             onChange={(e) => dispatch(setPlayTuningKey(e.target.value))}
             value={playTuningKey}>
-            {PLAYTUNINGKEY_OPTIONS.map((v) => (
+            {PLAYTUNINGKEY_OPTIONS.map((v) =>
               <option key={v[0]} value={v[0]}>
                 {v[1]}
               </option>
-            ))}
+            )}
           </select>
         </div>
-      ) : null}
-      {playMode === "SCALES" ? (
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
+        : null}
+      {playMode === "SCALES" ?
+        <div className="tw-input-group">
+          <div className="tw-input-label">
             Scale
           </div>
           <select
-            className="custom-select custom-select-sm"
-            onChange={
-              (e) => {
-                setPlayScaleIndex(parseInt(e.target.value))
-                // this.setState({ playScaleIndex: e.target.value })
-                dispatch(setPlayScale(PLAYSCALE_OPTIONS[parseInt(e.target.value)][0]))
-              }}
+            className="tw-input"
+            onChange={(e) => {
+              setPlayScaleIndex(parseInt(e.target.value))
+              dispatch(setPlayScale(PLAYSCALE_OPTIONS[parseInt(e.target.value)][0]))
+            }}
             value={playScaleIndex?.toString()}>
             {PLAYSCALE_OPTIONS.map((v, i) => (
               <option
                 key={i}
                 value={i}
-                // name={v[1]}
                 disabled={v[0] === null}>
                 {v[1]}
               </option>
             ))}
           </select>
         </div>
-      ) : null}
+        : null}
       {playMode === "SCALES" ? (
-        <div className="input-group input-group-sm mr-3">
-          <div className="input-group-addon">
+        <div className="tw-input-group">
+          <div className="tw-input-label">
             Loop Mode
           </div>
           <select
-            className="custom-select custom-select-sm"
+            className="tw-input"
             onChange={(e) => dispatch(setPlayLoopMode(e.target.value))}
             value={playLoopMode}>
             {PLAYLOOPMODE_OPTIONS.map((v) => (
@@ -188,23 +180,22 @@ export function Toolbar() {
         </div>
       ) : null}
     </div>
-    <div className="form-inline mb-2">
-      <div className="input-group input-group-sm mr-3">
-        <div className="input-group-addon">
+    <div className="tw-flex tw-gap-2">
+      <div className="tw-input-group">
+        <div className="tw-input-label">
           Simulate Mode
         </div>
         <select
-          className="custom-select custom-select-sm"
+          className="tw-input"
           onChange={(e) => dispatch(setSimulateMode(e.target.value === "true"))}
           value={simulateMode}>
-          <option value={"true"}>On</option>
-          <option value={"false"}>Off</option>
+          <option value="true">On</option>
+          <option value="false">Off</option>
         </select>
-        <div className="input-group-addon text-danger">
+        <div className="tw-input-label">
           <small>(experimental)</small>
         </div>
       </div>
     </div>
   </div>
-
 }
