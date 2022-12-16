@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply !tw-bg-orange-100;
+  }
+}
+
 @layer components {
   .tw-btn {
-    @apply tw-flex tw-content-center tw-px-3 tw-py-1 tw-border tw-border-blue-800 tw-rounded tw-items-center;
+    @apply tw-flex tw-content-center tw-bg-white tw-px-3 tw-py-1 tw-border tw-border-blue-800 tw-rounded tw-items-center;
   }
 
   .tw-btn.active {
@@ -39,6 +45,10 @@
 
   .tw-input {
     @apply tw-py-1 tw-px-2 tw-border tw-border-slate-300 tw-rounded;
+  }
+
+  .tw-float {
+    @apply tw-rounded-xl tw-shadow tw-shadow-orange-900/50 tw-border tw-border-orange-100;
   }
 }
 

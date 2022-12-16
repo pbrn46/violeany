@@ -28,22 +28,17 @@ export function StaffDisplay() {
   }, [indexPlaying, scrollToIndexAsNeeded])
   const playSet = generatePlaySet(playScale, playLoopMode)
   const svgWidth = (playSet.length - 1) * staffDims.NOTE_DISTANCE_X + staffDims.NOTE_RADIUS * 2 + staffDims.PADL_X + staffDims.PADR_X
-  return <div
-    className="StaffDisplay"
-    ref={scrollBoxRef}
-    style={{ overflowX: "auto" }}>
-    <div
-      style={{ width: "0px" }}>
-      <svg className="StaffDisplay tw-border tw-border-black"
-        height={staffDims.SVG_HEIGHT}
-        style={{
-          width: svgWidth,
-        }}
-      >
-        <StaffDisplayStaves />
-        <StaffDisplayNotes playSet={playSet} />
-      </svg>
+  return <div className="tw-bg-white tw-float tw-p-3">
+    <div className="tw-overflow-x-auto" ref={scrollBoxRef}>
+      <div className="tw-w-0">
+        <svg
+          height={staffDims.SVG_HEIGHT}
+          style={{ width: svgWidth }}
+        >
+          <StaffDisplayStaves />
+          <StaffDisplayNotes playSet={playSet} />
+        </svg>
+      </div>
     </div>
   </div>
-
 }

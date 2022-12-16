@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default function InfoButton() {
+export function InfoButton() {
   return <div className="InfoButton">
     <button type="button"
       className="InfoButton tw-p-2.5 hover:tw-bg-gray-200 focus:tw-outline-0 focus:tw-bg-gray-200"
