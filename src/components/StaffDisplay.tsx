@@ -4,6 +4,7 @@ import { staffDims, generateCx } from "../util/staff"
 import { StaffDisplayStaves } from './StaffDisplayStaves'
 import { StaffDisplayNotes } from './StaffDisplayNotes'
 import { useAppSelector } from "../redux/store"
+import { StaffDisplayClefs } from "./StaffDisplayClefs"
 
 export function StaffDisplay() {
   const { indexPlaying, playScale, playLoopMode } = useAppSelector(state => state)
@@ -36,6 +37,7 @@ export function StaffDisplay() {
           style={{ width: svgWidth }}
         >
           <StaffDisplayStaves />
+          <StaffDisplayClefs />
           <StaffDisplayNotes playSet={playSet} />
         </svg>
       </div>

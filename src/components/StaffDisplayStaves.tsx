@@ -1,18 +1,4 @@
-import { noteToY } from "../util/staff"
-
-const STAFF_LINE_NOTES = ["G2", "B2", "D3", "F3", "A3",
-  "E4", "G4", "B4", "D5", "F5",]
-
-
-function makeStaffYs() {
-  const staffYs = []
-  for (let i = 0; i < STAFF_LINE_NOTES.length; i++) {
-    let note = STAFF_LINE_NOTES[i]
-    staffYs.push(noteToY(note))
-  }
-  return staffYs
-}
-const STAFF_LINE_YS = makeStaffYs()
+import { STAFF_LINE_YS } from "../util/staff"
 
 export function StaffDisplayStaves() {
   const ret = []

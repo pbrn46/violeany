@@ -5,7 +5,7 @@ import { maxNoteIndex, noteToIndex } from "./violin"
 
 function makeStaffDims() {
   const staffDims = {
-    PADL_X: 30,
+    PADL_X: 80,
     PADR_X: 30,
     TRIMT_Y: 13, // Amount of notes to take off of top
     TRIMB_Y: 8,
@@ -27,6 +27,7 @@ function makeStaffDims() {
 }
 export const staffDims = makeStaffDims()
 
+/** Convert to Y position on staff */
 export const noteToY = (note: string) => {
   // Note
   var noteBase = note[0]
@@ -44,3 +45,20 @@ export const noteToY = (note: string) => {
 export function generateCx(index: number) {
   return index * staffDims.NOTE_DISTANCE_X + staffDims.NOTE_RADIUS + staffDims.PADL_X
 }
+
+/** Notes that have a staff line */
+const STAFF_LINE_NOTES = ["G2", "B2", "D3", "F3", "A3",
+  "E4", "G4", "B4", "D5", "F5",]
+
+/** Return Y positions of all notes that has a staff line */
+function makeStaffYs() {
+  const staffYs = []
+  for (let i = 0; i < STAFF_LINE_NOTES.length; i++) {
+    let note = STAFF_LINE_NOTES[i]
+    staffYs.push(noteToY(note))
+  }
+  return staffYs
+}
+
+/** Y position of all staff lines*/
+export const STAFF_LINE_YS = makeStaffYs()
