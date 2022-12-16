@@ -60,9 +60,9 @@ export function Toolbar() {
 
   const [playScaleIndex, setPlayScaleIndex] = useState<number | null>(PLAYSCALE_OPTIONS.findIndex(v => playScale === v[0]))
 
-  return <div className="Toolbar tw-grid tw-gap-2">
+  return <div className="tw-grid tw-gap-2 tw-float tw-p-3 tw-bg-emerald-100/50 tw-shadow-emerald-900/50">
 
-    <div className="tw-flex tw-gap-2">
+    <div className="tw-flex tw-flex-wrap tw-gap-2">
       <div className="tw-input-group">
         <div className="tw-input-label">
           Volume
@@ -74,7 +74,7 @@ export function Toolbar() {
           size={3}
         />
         <div className="tw-input-label">
-          ({percentToDecibel(volume)} dB)
+          {percentToDecibel(volume)} dB
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export function Toolbar() {
       </div>
     </div>
 
-    <div className="tw-flex tw-gap-2">
+    <div className="tw-flex tw-flex-wrap tw-gap-2">
       <div className="tw-input-group">
         <div className="tw-input-label">
           Play Mode
