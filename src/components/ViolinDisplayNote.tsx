@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import { setKeysClicked, addKeyClicked, removeKeyClicked } from "../actions"
 import { useAppDispatch, useAppSelector } from "../redux/store"
-import { Key, PlaySet, PlaySets } from "../util/violin"
+import { ViolinKey, PlaySet, PlaySets } from "../util/violin"
 import { Dims } from "./ViolinDisplay"
 
 type ViolinDisplayNoteProps = {
@@ -18,7 +18,7 @@ export function ViolinDisplayNote({ dims, playSet, note, noteIndex, stringIndex 
   const keysClicked = useAppSelector(state => state.keysClicked)
 
   type EventType = "mousedown" | "mouseup" | "mouseout" | "touchstart" | "touchend"
-  const handlePointEvent = useCallback((eventType: EventType, e: React.MouseEvent | React.TouchEvent, key: Key) => {
+  const handlePointEvent = useCallback((eventType: EventType, e: React.MouseEvent | React.TouchEvent, key: ViolinKey) => {
     switch (eventType) {
       case 'mousedown':
         dispatch(setKeysClicked([key]))
@@ -76,7 +76,7 @@ export function ViolinDisplayNote({ dims, playSet, note, noteIndex, stringIndex 
     transition = "fill 1s"
 
   // Event callback data
-  const key: Key = { position: [stringIndex, noteIndex], finger: -1 }
+  const key: ViolinKey = { position: [stringIndex, noteIndex], finger: -1 }
 
   // Text
   const finger = PlaySets.fingerFromPosition(

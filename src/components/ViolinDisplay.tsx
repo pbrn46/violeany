@@ -1,6 +1,7 @@
 // import * as actions from "../actions"
 import { useAppSelector } from "../redux/store"
-import { STRINGS, generatePlaySet } from "../util/violin"
+import { generatePlaySet } from "../util/violin"
+import { VIOLIN_STRINGS } from "../util/violinStrings"
 import { ViolinDisplayStrings } from "./ViolinDisplayStrings"
 
 import { ViolinDisplayView } from "./ViolinDisplayView"
@@ -62,6 +63,6 @@ export function ViolinDisplay() {
       stroke="#000"
       strokeWidth={dims.FIRST_ROW_MARGIN_Y / 2}
     />
-    <ViolinDisplayStrings dims={dims} playSet={playSet} strings={STRINGS} />
+    <ViolinDisplayStrings dims={dims} playSet={playSet} strings={VIOLIN_STRINGS} />
   </ViolinDisplayView>
 }

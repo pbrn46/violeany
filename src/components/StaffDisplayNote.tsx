@@ -1,6 +1,6 @@
 import { useAppSelector } from "../redux/store"
 import { generateCx, noteToY, staffDims } from "../util/staff"
-import { Key, noteFromPosition, NOTES, PlaySet, PlaySets } from "../util/violin"
+import { ViolinKey, noteFromPosition, NOTES, PlaySet, PlaySets } from "../util/violin"
 
 const NOTE_YS = (() => {
   const noteYs: Record<string, number> = {}
@@ -13,7 +13,7 @@ const NOTE_YS = (() => {
 
 type StaffDisplayNoteProps = {
   playSet: PlaySet
-  noteKey: Key
+  noteKey: ViolinKey
   index: number
 }
 export function StaffDisplayNote({ playSet, noteKey, index }: StaffDisplayNoteProps) {

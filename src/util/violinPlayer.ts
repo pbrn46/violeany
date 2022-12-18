@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react"
 import * as Tone from "tone"
 import { setIndexPlaying, setKeysPlaying, setTransportStatus } from "../actions"
 import { useAppDispatch, useAppSelector } from "../redux/store"
-import { generatePlaySet, Key, noteFromPosition, percentToDecibel } from "./violin"
+import { generatePlaySet, ViolinKey, noteFromPosition, percentToDecibel } from "./violin"
 
 // Ref: view-source:https://tonejs.github.io/examples/polySynth
 
@@ -88,7 +88,7 @@ export function useViolinPlayer() {
 
   const seqRef = useRef<Tone.Part | null>(null)
 
-  const getPlaySet = useCallback((): Key[] => {
+  const getPlaySet = useCallback((): ViolinKey[] => {
     if (playMode === "TUNING") {
       switch (playTuningKey) {
         case "G":

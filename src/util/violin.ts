@@ -1,27 +1,7 @@
-import { OrderedMap } from 'immutable'
-import SCALES from './scales'
-import GRADE_SCALES from './gradeScales'
-
-export { SCALES }
-export { GRADE_SCALES }
+import { getPlayScaleByKey } from "./scales"
+import { STRINGS_ARRAY } from "./violinStrings"
 
 export type Position = [number, number]
-
-// Position 1 goes to index 7 of each string
-export const STRINGS = OrderedMap<string, String>([
-  ["G", ["G3", "Ab3", "A3", "Bb3", "B3", "C4", "C#4", "D4",
-    "Eb4", "E4", "F4", "F#4", "G4"]],
-  ["D", ["D4", "Eb4", "E4", "F4", "F#4", "G4", "G#4", "A4",
-    "Bb4", "B4", "C5", "C#5", "D5",]],
-  ["A", ["A4", "Bb4", "B4", "C5", "C#5", "D5", "Eb5", "E5",
-    "F5", "F#5", "G5", "G#5", "A5",]],
-  ["E", ["E5", "F5", "F#5", "G5", "G#5", "A5", "Bb5", "B5",
-    "C6", "C#6", "D6", "Eb6", "E6",]],
-])
-export const STRINGS_ARRAY = STRINGS.toIndexedSeq().toArray()
-
-export type Strings = typeof STRINGS
-export type String = string[]
 
 export const NOTES = [
   "C1", "D1", "E1", "F1", "G1", "A1", "B1",
@@ -33,17 +13,18 @@ export const NOTES = [
   "C7", "D7", "E7", "F7", "G7", "A7", "B7",
 ]
 
-export type Key = {
+export type ViolinKey = {
   position: Position
   finger: number
   dur?: string
   downPosition?: Position
 }
 export type PlayLoopMode = "UP" | "DOWN" | "UPDOWN" | "UPDOWN_NODOUBLE" | "ONCE"
-export type PlaySet = Key[]
+export type PlaySet = ViolinKey[]
 
 export function generatePlaySet(playScale: string, playLoopMode: PlayLoopMode) {
-  const playSet = SCALES.get(playScale).keys
+  const playSet = getPlayScaleByKey(playScale)?.keys
+  if (!playSet) throw new Error("Invalid playScale key")
   let playSetDown = [...playSet]
   playSetDown.reverse()
   for (let i = 0; i < playSetDown.length; i++) {

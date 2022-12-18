@@ -1,15 +1,16 @@
-import { OrderedMap } from 'immutable'
-import { Key } from "./violin"
+import { ViolinKey } from "./violin"
 
 // D nat min 1 = D natural minor, one octave
 // TODO: position to notes may change sharps and flats. use key signature instead?
 // TODO: include note size (quarter, eigth, sixteenth, etc)
-export type SCALE = {
+export type Scale = {
+  key: string,
   title: string,
-  keys: Key[]
+  keys: ViolinKey[]
 }
-export const SCALES = OrderedMap<SCALE>({
-  "test1": {
+export const SCALES: Scale[] = [
+  {
+    key: "test1",
     title: "Test 1",
     keys: [
       { position: [1, 0], finger: 0, dur: "4n" },
@@ -23,7 +24,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 5], finger: 3 },
     ],
   },
-  "D maj 1": {
+  {
+    key: "D maj 1",
     title: "D major, one octave",
     keys: [
       { position: [1, 0], finger: 0 },
@@ -36,7 +38,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 5], finger: 3 },
     ],
   },
-  "A maj 1": {
+  {
+    key: "A maj 1",
     title: "A major, one octave",
     keys: [
       { position: [2, 0], finger: 0 },
@@ -49,7 +52,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 5], finger: 3 },
     ],
   },
-  "G maj 2": {
+  {
+    key: "G maj 2",
     title: "G major, two octaves",
     keys: [
       { position: [0, 0], finger: 0 },
@@ -69,7 +73,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 3], finger: 2 },
     ],
   },
-  "E nat min 1": {
+  {
+    key: "E nat min 1",
     title: "E natural minor, one octave",
     keys: [
       { position: [1, 2], finger: 1 },
@@ -82,7 +87,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 0], finger: 0 },
     ],
   },
-  "A maj 2": {
+  {
+    key: "A maj 2",
     title: "A major, two octaves",
     keys: [
       { position: [0, 2], finger: 1 },
@@ -102,7 +108,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 5], finger: 3 },
     ],
   },
-  "Bb maj 2": {
+  {
+    key: "Bb maj 2",
     title: "Bb major, two octaves",
     keys: [
       { position: [0, 3], finger: 2 },
@@ -122,7 +129,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 6], finger: 4 },
     ],
   },
-  "C maj 1": {
+  {
+    key: "C maj 1",
     title: "C major, one octave",
     keys: [
       { position: [0, 5], finger: 3 },
@@ -135,7 +143,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 3], finger: 2 },
     ],
   },
-  "F maj 1": {
+  {
+    key: "F maj 1",
     title: "F major, one octave",
     keys: [
       { position: [1, 3], finger: 2 },
@@ -148,7 +157,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [3, 1], finger: 1 },
     ],
   },
-  "D har min 1": {
+  {
+    key: "D har min 1",
     title: "D harmonic minor, one octave",
     keys: [
       { position: [1, 0], finger: 0 },
@@ -161,7 +171,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 5], finger: 3 },
     ],
   },
-  "D mel min 1": {
+  {
+    key: "D mel min 1",
     title: "D melodic minor, one octave",
     keys: [
       { position: [1, 0], finger: 0 },
@@ -174,7 +185,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 5], finger: 3 },
     ],
   },
-  "D nat min 1": {
+  {
+    key: "D nat min 1",
     title: "D natural minor, one octave",
     keys: [
       { position: [1, 0], finger: 0 },
@@ -187,7 +199,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [2, 5], finger: 3 },
     ],
   },
-  "G har min 1": {
+  {
+    key: "G har min 1",
     title: "G harmonic minor, one octave",
     keys: [
       { position: [0, 0], finger: 0 },
@@ -200,7 +213,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [1, 5], finger: 3 },
     ],
   },
-  "G mel min 1": {
+  {
+    key: "G mel min 1",
     title: "G melodic minor, one octave",
     keys: [
       { position: [0, 0], finger: 0 },
@@ -213,7 +227,8 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [1, 5], finger: 3 },
     ],
   },
-  "G nat min 1": {
+  {
+    key: "G nat min 1",
     title: "G natural minor, one octave",
     keys: [
       { position: [0, 0], finger: 0 },
@@ -226,6 +241,9 @@ export const SCALES = OrderedMap<SCALE>({
       { position: [1, 5], finger: 3 },
     ],
   },
-})
+]
 
-export default SCALES
+
+export function getPlayScaleByKey(playScaleKey: string) {
+  return SCALES.find(row => row.key === playScaleKey) || null
+}

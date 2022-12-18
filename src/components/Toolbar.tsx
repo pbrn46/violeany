@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react'
 import { play, setBpm, setPlayLoopMode, setPlayMode, setPlayScale, setPlayTuningKey, setSimulateMode, setVolume, stop } from '../actions'
 import { useAppDispatch, useAppSelector } from '../redux/store'
-import { GRADE_SCALES, SCALES, percentToDecibel } from "../util/violin"
+import { GRADE_SCALES } from "../util/gradeScales"
+import { getPlayScaleByKey, } from "../util/scales"
+import { percentToDecibel } from "../util/violin"
 
 const PLAYLOOPMODE_OPTIONS = [
   ["ONCE", "Once"],
@@ -15,16 +17,16 @@ const PLAYMODE_OPTIONS = [
   ["TUNING", "Tuning"],
 ]
 
-const PLAYSCALE_OPTIONS = GRADE_SCALES.reduce((acc, v, k) => {
-  // Add heading/divider
+const PLAYSCALE_OPTIONS = GRADE_SCALES.reduce((acc, gradeScale) => {
   if (!acc) return []
-  if (!v) return []
-  acc.push([null, "--- " + k + " ---"])
+  const { grade, scales } = gradeScale
 
-  acc = acc.concat(v.reduce((acc, v) => {
-    let scale = SCALES.get(v)
-    if (scale)
-      acc.push([v, scale.title])
+  // Add heading/divider
+  acc.push([null, "--- " + grade + " ---"])
+
+  acc = acc.concat(scales.reduce((acc, v) => {
+    let scale = getPlayScaleByKey(v)
+    if (scale) acc.push([v, scale.title])
     return acc
   }, [] as any[]))
   return acc

@@ -1,12 +1,13 @@
 import React from "react"
-import { PlaySet, Strings } from "../util/violin"
+import { PlaySet } from "../util/violin"
+import { ViolinStrings } from "../util/violinStrings"
 import { Dims } from "./ViolinDisplay"
 import { ViolinDisplayString } from "./ViolinDisplayString"
 
 type ViolinDisplayStringsProps = {
   dims: Dims
   playSet: PlaySet
-  strings: Strings
+  strings: ViolinStrings
 }
 export function ViolinDisplayStrings({ dims, playSet, strings }: ViolinDisplayStringsProps) {
   const ret: React.ReactNode[] = []
