@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Modal } from "./Modal"
 
 export function InfoButton() {
+  const [modalShow, setModalShow] = useState(false)
   return <div className="InfoButton">
     <button type="button"
-      className="InfoButton tw-p-2.5 hover:tw-bg-gray-200 focus:tw-outline-0 focus:tw-bg-gray-200"
-      data-toggle="modal"
-      data-target="#InfoButton-modal"
+      className="tw-p-2.5 tw-outline-1 tw-outline-black/0 focus:tw-outline-1 focus:tw-outline-black"
+      onClick={() => setModalShow(true)}
       style={{ lineHeight: "10px" }}>
       <svg width="20" height="20">
         <circle
@@ -22,57 +23,35 @@ export function InfoButton() {
           fontStyle="italic">i</text>
       </svg>
     </button>
-    <div className="modal fade" id="InfoButton-modal" aria-hidden="true">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h3 className="modal-title">Violeany</h3>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+    <Modal show={modalShow} onClose={() => setModalShow(false)}>
+      <div className="tw-w-96 tw-p-3 tw-grid gap-2">
+        <h2>About</h2>
+        Practice your violin scales here!
+
+        <div className="tw-border tw-rounded tw-p-2 tw-grid tw-gap-2">
+          <h3>Documentation</h3>
+
+          <div className="tw-border tw-rounded tw-p-1">
+            <h4 className="">
+              Getting Started
+            </h4>
+            <p className="">
+              Press <kbd>Play</kbd> to begin.
+            </p>
           </div>
-          <div className="modal-body">
-            <h5>About</h5>
-            <div className="card">
-              <div className="card-body">
-                <p className="card-text">
-                  Practice your violin scales here!
-                </p>
-              </div>
-            </div>
 
-            <h5>Documentation</h5>
-
-            <div className="card">
-              <div className="card-body">
-                <h6 className="card-title">
-                  Getting Started
-                </h6>
-                <p className="card-text">
-                  Press <kbd>Play</kbd> to begin.
-                </p>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-body">
-                <h6 className="card-title">
-                  Play Mode
-                </h6>
-                <p className="card-text">
-                  Pracitce scales in <code>Scales</code>, or tune your instrument in <code>Tuning</code> mode.
-                </p>
-              </div>
-            </div>
-
-            <hr />
-            <p><small>Created by Boris Wong</small></p>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+          <div className="tw-border tw-rounded tw-p-1">
+            <h4 className="">
+              Play Mode
+            </h4>
+            <p className="">
+              Practice scales in <code>Scales</code>, or tune your instrument in <code>Tuning</code> mode.
+            </p>
           </div>
         </div>
+
+        <p className="tw-text-sm">Created by Boris Wong.</p>
       </div>
-    </div>
+    </Modal>
   </div>
 }
