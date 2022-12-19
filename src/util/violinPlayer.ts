@@ -33,18 +33,23 @@ export function useViolinPlayer() {
       synth.set({
         volume: percentToDecibel(volume),
         envelope: {
-          "attack": 0.10,
-          "decay": 0.15,
-          "sustain": 1.0,
-          "release": 0.5,
+          attack: 0.2,
+          decay: 0.5,
+          sustain: 0.5,
+          release: 0.1,
         },
       })
       const reverb = new Tone.Freeverb(0.3, 4000)
       reverb.wet.value = 0.3;
       const delay = new Tone.PingPongDelay(0.1, 0.1)
       delay.wet.value = 0.2;
-      synth.chain(delay, reverb, Tone.Destination)
-      // synth.sync()
+
+      const vibrato = new Tone.Vibrato({
+        maxDelay: 0.005,
+        frequency: 5,
+        depth: 0.05
+      })
+      synth.chain(vibrato, delay, reverb, Tone.Destination)
       synthRef.current = synth
     }
 
