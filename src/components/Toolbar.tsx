@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
-import { play, setBpm, setPlayLoopMode, setPlayMode, setPlayScale, setPlayTuningKey, setSimulateMode, setVolume, stop } from '../actions'
+import { configActions } from "../redux/reducers/config"
+import { statusActions } from "../redux/reducers/status"
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { GRADE_SCALES } from "../util/gradeScales"
 import { getPlayScaleByKey, } from "../util/scales"
-import { percentToDecibel } from "../util/violin"
+import { BaseKey, percentToDecibel, PlayLoopMode, PlayMode } from "../util/violin"
 
 const PLAYLOOPMODE_OPTIONS = [
   ["ONCE", "Once"],
@@ -44,21 +45,21 @@ const PLAYTUNINGKEY_OPTIONS = [
 export function Toolbar() {
   const dispatch = useAppDispatch()
   const handlePlayClick = useCallback(() => {
-    dispatch(play())
+    dispatch(statusActions.setIsPlaying(true))
   }, [dispatch])
 
   const handleStopClick = useCallback(() => {
-    dispatch(stop())
+    dispatch(statusActions.setIsPlaying(false))
   }, [dispatch])
 
-  const playScale = useAppSelector(state => state.playScale)
-  const transportStatus = useAppSelector(state => state.transportStatus)
-  const volume = useAppSelector(state => state.volume)
-  const bpm = useAppSelector(state => state.bpm)
-  const playMode = useAppSelector(state => state.playMode)
-  const playTuningKey = useAppSelector(state => state.playTuningKey)
-  const playLoopMode = useAppSelector(state => state.playLoopMode)
-  const simulateMode = useAppSelector(state => state.simulateMode)
+  const transportStatus = useAppSelector(state => state.status.transportStatus)
+  const playScale = useAppSelector(state => state.config.playScale)
+  const volume = useAppSelector(state => state.config.volume)
+  const bpm = useAppSelector(state => state.config.bpm)
+  const playMode = useAppSelector(state => state.config.playMode)
+  const playTuningKey = useAppSelector(state => state.config.playTuningKey)
+  const playLoopMode = useAppSelector(state => state.config.playLoopMode)
+  const simulateMode = useAppSelector(state => state.config.simulateMode)
 
   const [playScaleIndex, setPlayScaleIndex] = useState<number | null>(PLAYSCALE_OPTIONS.findIndex(v => playScale === v[0]))
 
@@ -72,7 +73,7 @@ export function Toolbar() {
         <input type="text"
           className="tw-input"
           value={volume}
-          onChange={(e) => dispatch(setVolume(e.target.value))}
+          onChange={(e) => dispatch(configActions.setVolume(parseInt(e.target.value)))}
           size={3}
         />
         <div className="tw-input-label">
@@ -87,7 +88,7 @@ export function Toolbar() {
         <input type="text"
           className="tw-input"
           value={bpm}
-          onChange={(e) => dispatch(setBpm(e.target.value))}
+          onChange={(e) => dispatch(configActions.setBpm(parseInt((e.target.value))))}
           size={3}
         />
       </div>
@@ -100,7 +101,7 @@ export function Toolbar() {
         </div>
         <select
           className="tw-input"
-          onChange={(e) => dispatch(setPlayMode(e.target.value))}
+          onChange={(e) => dispatch(configActions.setPlayMode(e.target.value as PlayMode))}
           value={playMode}>
           {PLAYMODE_OPTIONS.map((v) =>
             <option key={v[0]} value={v[0]}>
@@ -117,7 +118,7 @@ export function Toolbar() {
           </div>
           <select
             className="tw-input"
-            onChange={(e) => dispatch(setPlayTuningKey(e.target.value))}
+            onChange={(e) => dispatch(configActions.setPlayTuningKey(e.target.value as BaseKey))}
             value={playTuningKey}>
             {PLAYTUNINGKEY_OPTIONS.map((v) =>
               <option key={v[0]} value={v[0]}>
@@ -136,7 +137,7 @@ export function Toolbar() {
             className="tw-input"
             onChange={(e) => {
               setPlayScaleIndex(parseInt(e.target.value))
-              dispatch(setPlayScale(PLAYSCALE_OPTIONS[parseInt(e.target.value)][0]))
+              dispatch(configActions.setPlayScale(PLAYSCALE_OPTIONS[parseInt(e.target.value)][0]))
             }}
             value={playScaleIndex?.toString()}>
             {PLAYSCALE_OPTIONS.map((v, i) => (
@@ -157,7 +158,7 @@ export function Toolbar() {
           </div>
           <select
             className="tw-input"
-            onChange={(e) => dispatch(setPlayLoopMode(e.target.value))}
+            onChange={(e) => dispatch(configActions.setPlayLoopMode(e.target.value as PlayLoopMode))}
             value={playLoopMode}>
             {PLAYLOOPMODE_OPTIONS.map((v) => (
               <option key={v[0]} value={v[0]}>
@@ -175,8 +176,8 @@ export function Toolbar() {
         </div>
         <select
           className="tw-input"
-          onChange={(e) => dispatch(setSimulateMode(e.target.value === "true"))}
-          value={simulateMode}>
+          onChange={(e) => dispatch(configActions.setSimulateMode(e.target.value === "true"))}
+          value={simulateMode ? "true" : "false"}>
           <option value="true">On</option>
           <option value="false">Off</option>
         </select>

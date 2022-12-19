@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { setKeysClicked, addKeyClicked, removeKeyClicked } from "../actions"
+import { statusActions } from "../redux/reducers/status"
 import { useAppDispatch, useAppSelector } from "../redux/store"
 import { ViolinKey, PlaySet, PlaySets } from "../util/violin"
 import { Dims } from "./ViolinDisplay"
@@ -13,33 +13,33 @@ type ViolinDisplayNoteProps = {
 }
 export function ViolinDisplayNote({ dims, playSet, note, noteIndex, stringIndex }: ViolinDisplayNoteProps) {
   const dispatch = useAppDispatch()
-  const playMode = useAppSelector(state => state.playMode)
-  const keysPlaying = useAppSelector(state => state.keysPlaying)
-  const keysClicked = useAppSelector(state => state.keysClicked)
+  const playMode = useAppSelector(state => state.config.playMode)
+  const keysPlaying = useAppSelector(state => state.status.keysPlaying)
+  const keysClicked = useAppSelector(state => state.status.keysClicked)
 
   type EventType = "mousedown" | "mouseup" | "mouseout" | "touchstart" | "touchend"
   const handlePointEvent = useCallback((eventType: EventType, e: React.MouseEvent | React.TouchEvent, key: ViolinKey) => {
     switch (eventType) {
       case 'mousedown':
-        dispatch(setKeysClicked([key]))
+        dispatch(statusActions.setKeysClicked([key]))
         break
       case 'mouseup':
-        dispatch(setKeysClicked(null))
+        dispatch(statusActions.setKeysClicked([]))
         break
       case 'mouseout':
-        dispatch(setKeysClicked(null))
+        dispatch(statusActions.setKeysClicked([]))
         break
       case 'touchstart':
         if (e instanceof TouchEvent && e.touches.length > 0) {
-          dispatch(addKeyClicked(key))
+          dispatch(statusActions.addKeyClicked(key))
         }
         break
       case 'touchend':
         if (e instanceof TouchEvent && e.touches.length === 0) {
-          dispatch(setKeysClicked(null))
+          dispatch(statusActions.setKeysClicked([]))
           // this.props.removeKeyClicked(key)
         } else {
-          dispatch(removeKeyClicked(key))
+          dispatch(statusActions.removeKeyClicked(key))
         }
         e.preventDefault()
         break

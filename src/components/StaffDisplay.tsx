@@ -7,7 +7,8 @@ import { useAppSelector } from "../redux/store"
 import { StaffDisplayClefs } from "./StaffDisplayClefs"
 
 export function StaffDisplay() {
-  const { indexPlaying, playScale, playLoopMode } = useAppSelector(state => state)
+  const { playScale, playLoopMode } = useAppSelector(state => state.config)
+  const indexPlaying = useAppSelector(state => state.status.indexPlaying)
   const scrollBoxRef = useRef<HTMLDivElement>(null)
   const scrollToIndexAsNeeded = useCallback((index: number) => {
     const scrollBox = scrollBoxRef.current

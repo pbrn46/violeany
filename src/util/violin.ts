@@ -3,6 +3,8 @@ import { STRINGS_ARRAY } from "./violinStrings"
 
 export type Position = [number, number]
 
+export type BaseKey = "G" | "D" | "A" | "E"
+
 export const NOTES = [
   "C1", "D1", "E1", "F1", "G1", "A1", "B1",
   "C2", "D2", "E2", "F2", "G2", "A2", "B2",
@@ -12,6 +14,8 @@ export const NOTES = [
   "C6", "D6", "E6", "F6", "G6", "A6", "B6",
   "C7", "D7", "E7", "F7", "G7", "A7", "B7",
 ]
+
+export type PlayMode = "SCALES" | "TUNING"
 
 export type ViolinKey = {
   position: Position

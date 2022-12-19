@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react"
 import * as Tone from "tone"
-import { setIndexPlaying, setKeysPlaying, setTransportStatus } from "../actions"
+import { statusActions } from "../redux/reducers/status"
 import { useAppDispatch, useAppSelector } from "../redux/store"
 import { generatePlaySet, ViolinKey, noteFromPosition, percentToDecibel } from "./violin"
 
@@ -9,17 +9,11 @@ import { generatePlaySet, ViolinKey, noteFromPosition, percentToDecibel } from "
 export function useViolinPlayer() {
   const dispatch = useAppDispatch()
 
-  const {
-    keysClicked,
-    playMode,
-    playScale,
-    playTuningKey,
-    playLoopMode,
-    volume,
-    bpm,
-    isPlaying,
-  } = useAppSelector(state => state)
+  const { playMode, playScale, playTuningKey, playLoopMode, volume, bpm, }
+    = useAppSelector(state => state.config)
 
+  const { keysClicked, isPlaying, }
+    = useAppSelector(state => state.status)
   const synthRef = useRef<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> | null>(null)
 
   // Create PolySynth
@@ -65,9 +59,9 @@ export function useViolinPlayer() {
 
   // Register transport events
   useEffect(() => {
-    const handleTransportStart = () => { dispatch(setTransportStatus("started")) }
-    const handleTransportStop = () => { dispatch(setTransportStatus("stopped")) }
-    const handleTransportPause = () => { dispatch(setTransportStatus("paused")) }
+    const handleTransportStart = () => { dispatch(statusActions.setTransportStatus("started")) }
+    const handleTransportStop = () => { dispatch(statusActions.setTransportStatus("stopped")) }
+    const handleTransportPause = () => { dispatch(statusActions.setTransportStatus("paused")) }
     const handleTransportLoop = () => { }
 
     Tone.Transport.on('start', handleTransportStart)
@@ -141,11 +135,11 @@ export function useViolinPlayer() {
       if (note !== "r0")
         synth.triggerAttackRelease(note, dur, time)
       Tone.Draw.schedule(() => {
-        dispatch(setKeysPlaying([setItem]))
+        dispatch(statusActions.setKeysPlaying([setItem]))
         if (playMode === "TUNING")
-          dispatch(setIndexPlaying(null))
+          dispatch(statusActions.setIndexPlaying(-1))
         else
-          dispatch(setIndexPlaying(index))
+          dispatch(statusActions.setIndexPlaying(index))
       }, time)
     }, parts)
     seq.start()
@@ -163,8 +157,8 @@ export function useViolinPlayer() {
   }, [updateSequence])
 
   const stop = useCallback(() => {
-    dispatch(setKeysPlaying(null))
-    dispatch(setIndexPlaying(null))
+    dispatch(statusActions.setKeysPlaying([]))
+    dispatch(statusActions.setIndexPlaying(-1))
     synthRef.current?.releaseAll()
     Tone.Transport.stop()
   }, [dispatch])
@@ -209,7 +203,6 @@ export function useViolinPlayer() {
     newNotes.forEach((note: any) => {
       synth.triggerAttack(note)
     })
-
 
     // Release old notes
     oldNotes.forEach((note: any) => {

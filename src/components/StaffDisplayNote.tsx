@@ -32,7 +32,7 @@ export function StaffDisplayNote({ playSet, noteKey, index }: StaffDisplayNotePr
   const cx = generateCx(index)
   const cy = NOTE_YS[noteBase + octave]
 
-  const { indexPlaying, keysClicked } = useAppSelector(state => state)
+  const { indexPlaying, keysClicked } = useAppSelector(state => state.status)
 
   // Fill Color
   const isPlaying = index === indexPlaying

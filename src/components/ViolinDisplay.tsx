@@ -51,7 +51,7 @@ export function makeDims(isSimulateMode: boolean) {
 export type Dims = ReturnType<typeof makeDims>
 
 export function ViolinDisplay() {
-  const { playScale, playLoopMode, simulateMode } = useAppSelector(state => state)
+  const { playScale, playLoopMode, simulateMode } = useAppSelector(state => state.config)
   const playSet = generatePlaySet(playScale, playLoopMode)
   const dims = makeDims(simulateMode)
   return <ViolinDisplayView dims={dims}>

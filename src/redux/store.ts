@@ -2,10 +2,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 // ...
 
-import reducer from "./reducers"
+import { rootReducer } from "./rootReducer"
 
 export const store = configureStore({
-  reducer,
+  reducer: rootReducer,
   // reducer: {
   //   posts: postsReducer,
   //   comments: commentsReducer,
