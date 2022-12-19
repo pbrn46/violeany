@@ -44,27 +44,13 @@ export function useViolinPlayer() {
       const delay = new Tone.PingPongDelay(0.1, 0.1)
       delay.wet.value = 0.2;
       synth.chain(delay, reverb, Tone.Destination)
+      // synth.sync()
       synthRef.current = synth
     }
 
     return () => {
     }
   }, [volume])
-
-  const handleTransportStart = useCallback(() => {
-    dispatch(setTransportStatus("started"))
-  }, [dispatch])
-
-  const handleTransportStop = useCallback(() => {
-    dispatch(setTransportStatus("stopped"))
-  }, [dispatch])
-
-  const handleTransportPause = useCallback(() => {
-    dispatch(setTransportStatus("paused"))
-  }, [dispatch])
-
-  const handleTransportLoop = useCallback(() => {
-  }, [])
 
   // Watch bpm changes
   useEffect(() => {
@@ -74,6 +60,11 @@ export function useViolinPlayer() {
 
   // Register transport events
   useEffect(() => {
+    const handleTransportStart = () => { dispatch(setTransportStatus("started")) }
+    const handleTransportStop = () => { dispatch(setTransportStatus("stopped")) }
+    const handleTransportPause = () => { dispatch(setTransportStatus("paused")) }
+    const handleTransportLoop = () => { }
+
     Tone.Transport.on('start', handleTransportStart)
     Tone.Transport.on('stop', handleTransportStop)
     Tone.Transport.on('pause', handleTransportPause)
@@ -84,7 +75,7 @@ export function useViolinPlayer() {
       Tone.Transport.off('pause', handleTransportPause)
       Tone.Transport.off('loop', handleTransportLoop)
     }
-  }, [handleTransportLoop, handleTransportPause, handleTransportStart, handleTransportStop])
+  }, [dispatch])
 
   const seqRef = useRef<Tone.Part | null>(null)
 
@@ -145,25 +136,25 @@ export function useViolinPlayer() {
       if (note !== "r0")
         synth.triggerAttackRelease(note, dur, time)
       Tone.Draw.schedule(() => {
-        if (Tone.Transport.state !== "started") return
         dispatch(setKeysPlaying([setItem]))
         if (playMode === "TUNING")
           dispatch(setIndexPlaying(null))
         else
           dispatch(setIndexPlaying(index))
       }, time)
-    }, parts).start("+0.1")
+    }, parts)
+    seq.start()
     seq.loopEnd = timeOffset
     seq.loop = playLoopMode !== "ONCE"
 
     seqRef.current = seq
-
   }, [bpm, dispatch, getPlaySet, playLoopMode, playMode])
 
   const play = useCallback(() => {
     updateSequence()
-    Tone.Transport.context.lookAhead = 0.5
-    Tone.Transport.start("+0.1")
+    // Lookahead seems to cause bad race conditions with drawing and delays in keypressing
+    // Tone.Transport.context.lookAhead = 0.5
+    Tone.Transport.start()
   }, [updateSequence])
 
   const stop = useCallback(() => {
@@ -213,6 +204,7 @@ export function useViolinPlayer() {
     newNotes.forEach((note: any) => {
       synth.triggerAttack(note)
     })
+
 
     // Release old notes
     oldNotes.forEach((note: any) => {
